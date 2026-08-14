@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NAK FARM ACCOUNT</title>
@@ -36,10 +35,37 @@ button{border:0;border-radius:9px;padding:10px 14px;font-weight:bold;cursor:poin
 @media(max-width:1000px){.dashboard{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:800px){.dashboard{grid-template-columns:repeat(2,1fr)}.cards,.form-grid{grid-template-columns:1fr}}
 @media(max-width:500px){.dashboard{grid-template-columns:1fr 1fr}.stat-value{font-size:20px}}
+
+/* ===== AUTH / USER MANAGEMENT ===== */
+#loginScreen{position:fixed;inset:0;background:linear-gradient(135deg,#111,#333);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
+.login-box{width:100%;max-width:410px;background:#fff;border-radius:20px;padding:30px;box-shadow:0 15px 50px #0005}
+.login-logo{text-align:center;font-size:28px;font-weight:bold;margin-bottom:8px}.login-logo span{color:#ff8500}.login-subtitle{text-align:center;color:#777;margin-bottom:25px}
+.login-error{color:#dc3545;background:#fff0f0;padding:10px;border-radius:8px;margin-bottom:12px;display:none}
+.login-btn{width:100%;padding:14px;background:#ff7a00;color:#fff;font-size:17px}
+#appScreen{display:none}.user-box{display:flex;align-items:center;gap:8px}.user-name{font-size:13px;color:#fff}.logout-btn{background:#dc3545;color:#fff;padding:7px 10px}
+.role-badge{font-size:11px;padding:4px 7px;border-radius:20px;background:#198754;color:#fff}.role-admin{background:#6f42c1}.role-viewer{background:#6c757d}
+.admin-user-card{background:#fafafa;border:1px solid #eee;border-radius:12px;padding:14px}.admin-user-card .info{font-size:13px}
+.viewer-lock{background:#fff3cd;border:1px solid #ffe08a;color:#856404;padding:10px;border-radius:10px;margin-bottom:12px}
+
 </style>
 </head>
 <body>
-<header><div class="header"><div class="logo">NAK <span>FARM</span> ACCOUNT</div><div id="today"></div></div></header>
+
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">บัญชีการเงิน <span>รถไถ่และรถเกี่ยวข้าว</span> แน็ก</div>
+    <div class="login-subtitle">🔐 เข้าสู่ระบบเจ้าของกิจการ</div>
+    <div id="loginError" class="login-error"></div>
+    <label>📧 Email</label>
+    <input type="email" id="loginEmail" placeholder="กรอกอีเมล" autocomplete="username">
+    <label>🔑 รหัสผ่าน</label>
+    <input type="password" id="loginPassword" placeholder="กรอกรหัสผ่าน" autocomplete="current-password" onkeydown="if(event.key==='Enter') login()">
+    <button class="login-btn" onclick="login()">🔐 เข้าสู่ระบบ</button>
+  </div>
+</div>
+<div id="appScreen">
+
+<header><div class="header"><div class="logo">บัญชีการเงิน <span>รถไถ่และรถเกี่ยวข้าว</span> แน็ก</div><div class="user-box"><div id="today"></div><div id="currentUser" class="user-name"></div><span id="roleBadge" class="role-badge"></span><button class="logout-btn" onclick="logout()">🚪 ออก</button></div></div></header>
 <div class="container">
 
 <div class="dashboard">
@@ -57,6 +83,7 @@ button{border:0;border-radius:9px;padding:10px 14px;font-weight:bold;cursor:poin
 <button class="tab" onclick="openTab('fuel',this)">⛽ น้ำมัน</button>
 <button class="tab" onclick="openTab('money',this)">💰 การเงิน</button>
 <button class="tab" onclick="openTab('payment',this)">💳 ชำระเงิน</button>
+<button id="adminTab" class="tab" style="display:none" onclick="openTab('admin',this)">⚙️ จัดการผู้ใช้</button>
 </div>
 
 <div id="home" class="section active">
@@ -142,7 +169,7 @@ button{border:0;border-radius:9px;padding:10px 14px;font-weight:bold;cursor:poin
 <div><label>ลูกค้า</label><select id="onlineCustomer" onchange="syncOnlineDebt()"><option value="">-- เลือกลูกค้า --</option></select></div>
 <div><label>จำนวนเงิน</label><input type="number" id="onlineAmount" min="1" step="0.01" placeholder="เช่น 5000"></div>
 </div>
-<div class="note" style="margin-top:10px">QR ด้านล่างเป็น QR ที่คุณนำมาใส่เอง ระบบจะสร้างรายการ “รอตรวจสอบ” ให้ก่อน ยังไม่ถือว่าเงินเข้าอัตโนมัติจนกว่าจะเชื่อม Bank API/Webhook</div>
+<div class="note" style="margin-top:10px">QR ด้านล่างเป็น QR พร้อมเพย์ของบัญชีที่คุณส่งมา ระบบจะสร้างรายการ “รอตรวจสอบ” ให้ก่อน และยังไม่ถือว่าเงินเข้าอัตโนมัติจนกว่าจะเชื่อม Bank API/Webhook</div>
 <br><button class="btn-blue" style="width:100%;padding:15px;font-size:17px" onclick="createOnlinePayment()">📱 สร้างรายการชำระออนไลน์</button>
 <div id="onlinePaymentBox" class="online-box">
 <h3>📱 QR สำหรับชำระเงิน</h3>
@@ -174,6 +201,25 @@ button{border:0;border-radius:9px;padding:10px 14px;font-weight:bold;cursor:poin
 
 </div>
 
+<div id="admin" class="section">
+<div class="panel">
+<h2>⚙️ จัดการผู้ใช้</h2>
+<div class="viewer-lock">👑 เฉพาะ Admin เท่านั้นที่สามารถเพิ่ม/ปิด/ลบผู้ใช้ และตั้งรหัสผ่านให้ผู้ใช้ได้</div>
+<div class="form-grid">
+<div><label>ชื่อผู้ใช้</label><input id="adminFullName" placeholder="เช่น สมชาย ใจดี"></div>
+<div><label>Email</label><input type="email" id="adminEmail" placeholder="user@example.com"></div>
+<div><label>รหัสผ่านเริ่มต้น</label><input type="password" id="adminPassword" placeholder="อย่างน้อย 6 ตัวอักษร"></div>
+<div><label>สิทธิ์</label><select id="adminRole"><option value="user">👤 User</option><option value="viewer">👁️ Viewer</option><option value="admin">👑 Admin</option></select></div>
+</div><br>
+<button class="btn-green" style="width:100%;padding:14px" onclick="adminCreateUser()">➕ เพิ่มผู้ใช้</button>
+</div>
+<div class="panel"><h2>👥 ผู้ใช้ในระบบ</h2><div id="adminUserList" class="cards"></div></div>
+<div class="panel"><h2>🔑 เปลี่ยนรหัสผ่านของฉัน</h2>
+<div class="form-grid"><div><label>รหัสผ่านใหม่</label><input type="password" id="myNewPassword" placeholder="อย่างน้อย 6 ตัวอักษร"></div><div><label>ยืนยันรหัสผ่าน</label><input type="password" id="myNewPassword2" placeholder="กรอกรหัสผ่านอีกครั้ง"></div></div><br>
+<button class="btn-blue" onclick="changeMyPassword()">🔑 เปลี่ยนรหัสผ่าน</button>
+</div>
+</div>
+
 </div>
 <div id="status" class="status">กำลังเชื่อมต่อ...</div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -181,6 +227,91 @@ button{border:0;border-radius:9px;padding:10px 14px;font-weight:bold;cursor:poin
 const SUPABASE_URL="https://mpnegrefmciqxcybbinx.supabase.co";
 const SUPABASE_KEY="sb_publishable_qecRj2d_rtaoiDAfv2Gf7A_LuBLJ8MR";
 const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+let currentUser=null,currentProfile=null,adminUsers=[];
+const ADMIN_FUNCTION="admin-user-management";
+function roleIsAdmin(){return currentProfile?.role==="admin"}
+function roleCanWrite(){return ["admin","user"].includes(currentProfile?.role)}
+function guardWrite(){if(!roleCanWrite()){alert("บัญชี Viewer มีสิทธิ์ดูข้อมูลอย่างเดียว");return false}return true}
+function showLoginError(t){const e=$("loginError");e.innerText=t;e.style.display="block"}
+function clearLoginError(){const e=$("loginError");e.innerText="";e.style.display="none"}
+
+async function login(){
+ clearLoginError();
+ const email=$("loginEmail").value.trim(),password=$("loginPassword").value;
+ if(!email||!password)return showLoginError("กรุณากรอก Email และรหัสผ่าน");
+ const b=document.querySelector(".login-btn");b.disabled=true;b.innerText="กำลังเข้าสู่ระบบ...";
+ try{
+  const r=await supabaseClient.auth.signInWithPassword({email,password});
+  if(r.error)throw r.error;
+  currentUser=r.data.user;
+  await loadUserProfile();
+ }catch(e){showLoginError("เข้าสู่ระบบไม่สำเร็จ: "+e.message)}
+ finally{b.disabled=false;b.innerText="🔐 เข้าสู่ระบบ"}
+}
+
+async function loadUserProfile(){
+ if(!currentUser)return;
+ const r=await supabaseClient.from("profiles").select("*").eq("id",currentUser.id).single();
+ if(r.error){await supabaseClient.auth.signOut();showLoginError("ไม่พบโปรไฟล์ผู้ใช้ กรุณาสร้างตาราง profiles ตามไฟล์ supabase_setup.sql");return}
+ currentProfile=r.data;
+ if(currentProfile.is_active===false){await supabaseClient.auth.signOut();showLoginError("บัญชีนี้ถูกปิดการใช้งาน");return}
+ $("loginScreen").style.display="none";$("appScreen").style.display="block";
+ $("currentUser").innerText=currentProfile.full_name||currentUser.email;
+ const roleText={admin:"👑 Admin",user:"👤 User",viewer:"👁️ Viewer"}[currentProfile.role]||currentProfile.role;
+ $("roleBadge").innerText=roleText;$("roleBadge").className="role-badge "+(currentProfile.role==="admin"?"role-admin":currentProfile.role==="viewer"?"role-viewer":"");
+ $("adminTab").style.display=roleIsAdmin()?"block":"none";
+ applyRoleUI();
+ await loadData();
+ if(roleIsAdmin())await loadAdminUsers();
+}
+
+function applyRoleUI(){
+ const viewer=currentProfile?.role==="viewer";
+ document.querySelectorAll(".btn,.btn-green,.btn-red,.btn-blue,.btn-dark,.add-job,.remove-job").forEach(b=>{
+  if(viewer)b.style.display="none";
+ });
+}
+
+async function logout(){if(!confirm("ต้องการออกจากระบบหรือไม่?"))return;await supabaseClient.auth.signOut();location.reload()}
+
+async function checkLogin(){
+ const r=await supabaseClient.auth.getSession();
+ if(r.data.session){currentUser=r.data.session.user;await loadUserProfile()}else{$("loginScreen").style.display="flex";$('appScreen').style.display="none"}
+}
+
+supabaseClient.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT"){currentUser=null;currentProfile=null;}});
+
+async function adminCall(action,payload={}){
+ if(!roleIsAdmin())throw new Error("ต้องเป็น Admin เท่านั้น");
+ const session=await supabaseClient.auth.getSession();
+ const token=session.data.session?.access_token;
+ if(!token)throw new Error("เซสชันหมดอายุ กรุณา Login ใหม่");
+ const r=await supabaseClient.functions.invoke(ADMIN_FUNCTION,{body:{action,...payload}});
+ if(r.error)throw r.error;
+ if(r.data?.error)throw new Error(r.data.error);
+ return r.data;
+}
+
+async function loadAdminUsers(){
+ try{const r=await adminCall("list_users");adminUsers=r.users||[];renderAdminUsers()}catch(e){$("adminUserList").innerHTML='<div class="empty">ยังไม่ได้ติดตั้ง Edge Function สำหรับจัดการผู้ใช้<br>'+escapeHtml(e.message)+'</div>'}
+}
+function renderAdminUsers(){
+ let h="";
+ adminUsers.forEach(u=>{const role=u.profile?.role||u.user_metadata?.role||"user";const name=u.profile?.full_name||u.user_metadata?.full_name||u.email||"-";const active=u.profile?.is_active!==false;
+ h+=`<div class="admin-user-card"><h3>👤 ${escapeHtml(name)}</h3><div class="info"><span>Email</span><b>${escapeHtml(u.email||"-")}</b></div><div class="info"><span>สิทธิ์</span><b>${role}</b></div><div class="info"><span>สถานะ</span><b class="${active?"green":"red"}">${active?"🟢 ใช้งาน":"🔴 ปิดใช้งาน"}</b></div><div class="actions">${String(u.id)!==String(currentUser?.id)?`<button class="btn-blue" onclick="adminSetPassword('${u.id}')">🔑 ตั้งรหัสผ่าน</button><button class="btn" onclick="adminToggleUser('${u.id}',${active})">${active?"🔴 ปิด":"🟢 เปิด"}</button><button class="btn-red" onclick="adminDeleteUser('${u.id}')">🗑️ ลบ</button>`:`<span class="note">บัญชีของคุณ</span>`}</div></div>`});
+ $("adminUserList").innerHTML=h||'<div class="empty">ยังไม่มีผู้ใช้</div>';
+}
+async function adminCreateUser(){
+ const full_name=$("adminFullName").value.trim(),email=$("adminEmail").value.trim(),password=$("adminPassword").value,role=$("adminRole").value;
+ if(!email||password.length<6)return alert("กรุณากรอก Email และรหัสผ่านอย่างน้อย 6 ตัวอักษร");
+ try{await adminCall("create_user",{email,password,full_name,role});$("adminFullName").value="";$("adminEmail").value="";$("adminPassword").value="";await loadAdminUsers();alert("✅ เพิ่มผู้ใช้แล้ว")}catch(e){alert("เพิ่มผู้ใช้ไม่ได้\n\n"+e.message)}
+}
+async function adminSetPassword(id){const p=prompt("รหัสผ่านใหม่ (อย่างน้อย 6 ตัวอักษร)");if(p===null)return;if(p.length<6)return alert("รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร");try{await adminCall("set_password",{user_id:id,password:p});alert("✅ เปลี่ยนรหัสผ่านให้ผู้ใช้แล้ว")}catch(e){alert("เปลี่ยนรหัสผ่านไม่ได้\n\n"+e.message)}}
+async function adminToggleUser(id,active){if(!confirm(active?"ปิดการใช้งานผู้ใช้นี้หรือไม่?":"เปิดการใช้งานผู้ใช้นี้หรือไม่?"))return;try{await adminCall("set_active",{user_id:id,is_active:!active});await loadAdminUsers();alert("✅ เปลี่ยนสถานะแล้ว")}catch(e){alert(e.message)}}
+async function adminDeleteUser(id){if(!confirm("ลบผู้ใช้นี้ถาวรหรือไม่?"))return;try{await adminCall("delete_user",{user_id:id});await loadAdminUsers();alert("✅ ลบผู้ใช้แล้ว")}catch(e){alert("ลบไม่ได้\n\n"+e.message)}}
+async function changeMyPassword(){const p=$("myNewPassword").value,p2=$("myNewPassword2").value;if(p.length<6)return alert("รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร");if(p!==p2)return alert("รหัสผ่านไม่ตรงกัน");const r=await supabaseClient.auth.updateUser({password:p});if(r.error)return alert(r.error.message);$("myNewPassword").value="";$("myNewPassword2").value="";alert("✅ เปลี่ยนรหัสผ่านแล้ว")}
+
 
 let customers=[],jobs=[],fuels=[],money=[],payments=[];
 let editingCustomerId=null,editingPaymentId=null;
@@ -204,7 +335,7 @@ function addJobRow(data={}){
  box.className="job-box";if(data.id)box.dataset.jobId=data.id;
  box.innerHTML=`<div class="job-head"><div class="job-number">🚜 งานที่ ${index}</div><button class="remove-job" onclick="removeJobRow(this)">🗑️ ลบงาน</button></div>
  <div class="form-grid">
- <div><label>ประเภทงาน</label><select class="job-type"><option value="เกี่ยวข้าว">🌾 เกี่ยวข้าว</option><option value="ไถนา">🚜 ไถนา</option><option value="หว่านข้าว">🌱 หว่านข้าว</option><option value="ดำนา">🌱 ดำนา</option><option value="ขนข้าว">🚛 ขนข้าว</option><option value="อื่นๆ">🔧 อื่นๆ</option></select></div>
+ <div><label>ประเภทงาน</label><select class="job-type"><option value="เกี่ยวข้าว">🌾 เกี่ยวข้าว</option><option value="ไถนา">🚜 ไถนา</option><option value="ตีนา">🌱 ตีนา</option><option value="ดำนา">🌱 ดำนา</option><option value="ขนข้าว">🚛 ขนข้าว</option><option value="อื่นๆ">🔧 อื่นๆ</option></select></div>
  <div><label>วันที่</label><input type="date" class="job-date" value="${data.job_date||today()}"></div>
  <div><label>จำนวน</label><input type="number" class="job-quantity" min="0" value="${data.quantity??data.rai??""}" oninput="calculateForm()"></div>
  <div><label>หน่วย</label><select class="job-unit"><option value="ไร่">ไร่</option><option value="เที่ยว">เที่ยว</option><option value="ตัน">ตัน</option><option value="งาน">งาน</option><option value="ครั้ง">ครั้ง</option></select></div>
@@ -257,6 +388,7 @@ function renderCustomers(){
 }
 
 async function saveCustomerAndJobs(){
+ if(!guardWrite())return;
  if(editingCustomerId)return updateCustomerAndJobs();
  const name=$("cName").value.trim();if(!name)return alert("กรุณากรอกชื่อลูกค้า");
  const r=await supabaseClient.from("customers").insert({name,phone:$("cPhone").value,address:$("cAddress").value,note:$("cNote").value}).select().single();
@@ -281,6 +413,7 @@ function editCustomer(id){
  $("customerFormTitle").innerText="✏️ แก้ไขข้อมูลลูกค้า + งาน";$("editBanner").style.display="block";$("saveCustomerButton").innerText="💾 บันทึกการแก้ไข";$("cancelEditButton").style.display="block";openTabById("customer");
 }
 async function updateCustomerAndJobs(){
+ if(!guardWrite())return;
  const id=editingCustomerId;
  const r=await supabaseClient.from("customers").update({name:$("cName").value,phone:$("cPhone").value,address:$("cAddress").value,note:$("cNote").value}).eq("id",id);
  if(r.error)return alert(r.error.message);
@@ -294,6 +427,7 @@ async function updateCustomerAndJobs(){
  resetCustomerForm();await loadData();alert("✅ แก้ไขข้อมูลเรียบร้อยแล้ว");
 }
 async function deleteCustomer(id){
+ if(!guardWrite())return;
  if(!confirm("ลบลูกค้าและงานของลูกค้าคนนี้หรือไม่?"))return;
  const r=await supabaseClient.from("customers").delete().eq("id",id);if(r.error)return alert(r.error.message);
  await loadData();
@@ -306,6 +440,7 @@ function selectExistingCustomer(){const id=$("existingCustomer").value;if(id)edi
 function cancelEdit(){resetCustomerForm()}
 
 async function addFuel(){
+ if(!guardWrite())return;
  const date=$("fDate").value,liter=Number($("fLiter").value)||0,price=Number($("fPrice").value)||0,machine=$("fMachine").value.trim();
  if(!date||liter<=0||price<=0)return alert("กรุณากรอกวันที่ จำนวนลิตร และราคาต่อลิตร");
  const total=liter*price;
@@ -316,6 +451,7 @@ async function addFuel(){
  $("fLiter").value="";$("fPrice").value="";$("fMachine").value="";await loadData();alert("✅ บันทึกซื้อน้ำมัน "+baht(total));
 }
 async function editFuel(id){
+ if(!guardWrite())return;
  const f=fuels.find(x=>String(x.id)===String(id));if(!f)return;
  const date=prompt("วันที่ซื้อ (YYYY-MM-DD)",f.fuel_date||today());if(date===null)return;
  const liter=Number(prompt("จำนวนลิตร",f.liter||0));if(!liter||liter<=0)return;
@@ -331,6 +467,7 @@ async function editFuel(id){
  await loadData();alert("✅ แก้ไขรายการน้ำมันแล้ว");
 }
 async function deleteFuel(id){
+ if(!guardWrite())return;
  const f=fuels.find(x=>String(x.id)===String(id));if(!f)return;
  if(!confirm("ลบรายการซื้อน้ำมัน "+baht(Number(f.liter)*Number(f.price_per_liter))+" หรือไม่?\nระบบจะพยายามลบรายจ่ายที่สร้างคู่กันด้วย"))return;
  const total=Number(f.liter||0)*Number(f.price_per_liter||0),detail="ซื้อน้ำมัน "+f.liter+" ลิตร"+(f.machine?" ("+f.machine+")":"");
@@ -347,6 +484,7 @@ function renderFuel(){
 }
 
 async function addMoney(){
+ if(!guardWrite())return;
  const date=$("mDate").value,type=$("mType").value,detail=$("mDetail").value.trim(),amount=Number($("mAmount").value)||0;
  if(!date||!detail||amount<=0)return alert("กรุณากรอกข้อมูลให้ครบ");
  const r=await supabaseClient.from("money").insert({money_date:date,type,detail,amount});
@@ -354,6 +492,7 @@ async function addMoney(){
  $("mDetail").value="";$("mAmount").value="";await loadData();alert("✅ บันทึกรายการการเงินแล้ว");
 }
 async function editMoney(id){
+ if(!guardWrite())return;
  const m=money.find(x=>String(x.id)===String(id));if(!m)return;
  const date=prompt("วันที่ (YYYY-MM-DD)",m.money_date||today());if(date===null)return;
  const type=prompt("ประเภท income หรือ expense",m.type||"expense");if(type===null||!["income","expense"].includes(type))return alert("ประเภทต้องเป็น income หรือ expense");
@@ -363,6 +502,7 @@ async function editMoney(id){
  if(r.error)return alert(r.error.message);await loadData();alert("✅ แก้ไขรายการการเงินแล้ว");
 }
 async function deleteMoney(id){
+ if(!guardWrite())return;
  const m=money.find(x=>String(x.id)===String(id));if(!m)return;
  if(!confirm("ลบรายการ "+(m.detail||"")+" จำนวน "+baht(m.amount)+" หรือไม่?"))return;
  const r=await supabaseClient.from("money").delete().eq("id",id);if(r.error)return alert(r.error.message);
@@ -396,6 +536,7 @@ async function allocatePayment(customerId,amount){
  return allocation;
 }
 async function savePayment(){
+ if(!guardWrite())return;
  if(editingPaymentId)return updatePayment();
  const cid=$("pCustomer").value,amount=Number($("pAmount").value)||0;if(!cid||amount<=0)return alert("กรุณาเลือกลูกค้าและกรอกจำนวนเงิน");
  const s=getCustomerSummary(cid);if(amount>s.debt&&!confirm("ยอดค้าง "+baht(s.debt)+" แต่รับ "+baht(amount)+"\nต้องการบันทึกหรือไม่?"))return;
@@ -424,6 +565,7 @@ async function updatePayment(){
 }
 function cancelPaymentEdit(){editingPaymentId=null;$("pCustomer").value="";$("pAmount").value="";$("paymentSaveButton").innerText="✓ บันทึกการชำระเงิน";$("paymentCancelButton").style.display="none";$("paymentCustomerSummary").style.display="none"}
 async function deletePayment(id){
+ if(!guardWrite())return;
  const p=payments.find(x=>String(x.id)===String(id));if(!p)return;
  if(!confirm("ยกเลิกการชำระ "+baht(p.amount)+" ของ "+customerName(p.customer_id)+" หรือไม่?"))return;
  if(p.status==="paid"){
@@ -440,19 +582,25 @@ function loadQRFile(input){
  const reader=new FileReader();reader.onload=()=>{try{localStorage.setItem("nakfarm_qr",reader.result);showQR()}catch(e){alert("ไฟล์ใหญ่เกินไปสำหรับการเก็บในเบราว์เซอร์ กรุณาใช้รูป QR ขนาดเล็กลง")}};reader.readAsDataURL(file);
 }
 function showQR(){
- const src=localStorage.getItem("nakfarm_qr");$("qrCode").innerHTML=src?`<img src="${src}" alt="QR ธนาคาร">`:"<span>ยังไม่ได้ใส่ QR</span>";
+ const src=localStorage.getItem("nakfarm_qr") || "promptpay-qr.png";
+ $("qrCode").innerHTML=`<img src="${src}" alt="QR พร้อมเพย์" style="width:260px;max-width:100%;border-radius:12px;display:block;margin:auto">`;
 }
-function removeQR(){localStorage.removeItem("nakfarm_qr");showQR();alert("ลบ QR แล้ว")}
+function removeQR(){
+ localStorage.removeItem("nakfarm_qr");
+ showQR();
+ alert("คืนค่า QR พร้อมเพย์ของระบบแล้ว");
+}
 function syncOnlineDebt(){const id=$("onlineCustomer").value;if(id){const d=getCustomerSummary(id).debt;if(!$("onlineAmount").value)$("onlineAmount").value=d}}
 function createOnlinePayment(){
  const cid=$("onlineCustomer").value,amount=Number($("onlineAmount").value)||0;if(!cid||amount<=0)return alert("กรุณาเลือกลูกค้าและจำนวนเงิน");
- const src=localStorage.getItem("nakfarm_qr");if(!src)return alert("ยังไม่ได้ใส่รูป QR ธนาคาร\nไปที่ 'ตั้งค่า QR ธนาคาร' แล้วเลือกไฟล์ QR ของคุณก่อน");
+ const src=localStorage.getItem("nakfarm_qr") || "promptpay-qr.png";
  onlinePending={customer_id:cid,amount,payment_date:today(),payment_method:"online",status:"pending"};
  $("onlinePaymentBox").style.display="block";$("qrCode").innerHTML=`<img src="${src}" alt="QR ธนาคาร">`;
  $("onlinePaymentInfo").innerHTML=`<b>${escapeHtml(customerName(cid))}</b><br>ยอดชำระ <strong class="green">${baht(amount)}</strong><br><span class="note">สถานะ: รอตรวจสอบเงินเข้า</span>`;
  $("onlinePaymentBox").scrollIntoView({behavior:"smooth",block:"center"});
 }
 async function confirmOnlinePaymentManually(){
+ if(!guardWrite())return;
  if(!onlinePending)return alert("ยังไม่มีรายการออนไลน์");
  if(!confirm("ยืนยันว่าเงินจำนวน "+baht(onlinePending.amount)+" เข้าบัญชีแล้วใช่หรือไม่?\n\nปุ่มนี้เป็นการยืนยันด้วยคน ยังไม่ใช่การตรวจจากธนาคารอัตโนมัติ"))return;
  try{
@@ -477,10 +625,11 @@ function renderDashboard(){
 }
 function render(){renderCustomerSelects();renderCustomers();renderPayments();renderOnlineHistory();renderFuel();renderMoney();renderDashboard();showQR()}
 function openTab(id,btn){document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");if(btn)btn.classList.add("active")}
-function openTabById(id){document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");const map={home:0,customer:1,customerList:2,fuel:3,money:4,payment:5};document.querySelectorAll(".tab")[map[id]].classList.add("active")}
+function openTabById(id){document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");const map={home:0,customer:1,customerList:2,fuel:3,money:4,payment:5,admin:6};document.querySelectorAll(".tab")[map[id]].classList.add("active")}
 
 $("today").innerText=new Date().toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"});
-$("fDate").value=today();$("mDate").value=today();addJobRow();loadData();
+$("fDate").value=today();$("mDate").value=today();addJobRow();checkLogin();
 </script>
+</div>
 </body>
 </html>
