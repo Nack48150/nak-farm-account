@@ -1,2078 +1,488 @@
-<!DOCTYPE html>
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
 <html lang="th">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NAK FARM ACCOUNT</title>
-
 <style>
 *{box-sizing:border-box}
-
-body{
-margin:0;
-font-family:Arial,"Noto Sans Thai",sans-serif;
-background:#f2f4f7;
-color:#222;
-}
-
-header{
-background:linear-gradient(135deg,#111,#343434);
-color:white;
-padding:16px;
-position:sticky;
-top:0;
-z-index:10;
-}
-
-.header{
-max-width:1200px;
-margin:auto;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-.logo{
-font-size:23px;
-font-weight:bold;
-}
-
-.logo span{
-color:#ff8500;
-}
-
-.container{
-max-width:1200px;
-margin:auto;
-padding:15px;
-}
-
-.dashboard{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:12px;
-margin-bottom:18px;
-}
-
-.stat{
-background:white;
-border-radius:15px;
-padding:17px;
-box-shadow:0 3px 12px #0001;
-}
-
-.stat-title{
-font-size:14px;
-color:#777;
-}
-
-.stat-value{
-font-size:25px;
-font-weight:bold;
-margin-top:7px;
-}
-
-.red{color:#d62828}
-.green{color:#16833a}
-.orange{color:#e87500}
-.blue{color:#1769aa}
-
-.tabs{
-display:flex;
-gap:7px;
-overflow-x:auto;
-margin-bottom:15px;
-}
-
-.tab{
-background:white;
-border:0;
-padding:11px 15px;
-border-radius:10px;
-white-space:nowrap;
-cursor:pointer;
-}
-
-.tab.active{
-background:#ff7a00;
-color:white;
-}
-
-.section{
-display:none;
-}
-
-.section.active{
-display:block;
-}
-
-.panel{
-background:white;
-padding:20px;
-border-radius:15px;
-margin-bottom:18px;
-box-shadow:0 3px 12px #0001;
-}
-
-.panel h2{
-margin-top:0;
-}
-
-.form-grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:12px;
-}
-
-label{
-display:block;
-font-size:14px;
-margin-bottom:5px;
-font-weight:bold;
-}
-
-input,select{
-width:100%;
-padding:12px;
-border:1px solid #ddd;
-border-radius:9px;
-font-size:15px;
-}
-
-button{
-border:0;
-border-radius:9px;
-padding:10px 14px;
-font-weight:bold;
-cursor:pointer;
-}
-
-.btn{
-background:#ff7a00;
-color:white;
-}
-
-.btn-green{
-background:#198754;
-color:white;
-}
-
-.btn-red{
-background:#dc3545;
-color:white;
-}
-
-.btn-blue{
-background:#1769aa;
-color:white;
-}
-
-.btn-dark{
-background:#222;
-color:white;
-}
-
-.cards{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:12px;
-}
-
-.item-card{
-border:1px solid #eee;
-border-radius:14px;
-padding:15px;
-background:#fff;
-box-shadow:0 2px 8px #0000000d;
-}
-
-.item-card h3{
-margin:0 0 10px;
-}
-
-.info{
-display:flex;
-justify-content:space-between;
-padding:6px 0;
-border-bottom:1px solid #f0f0f0;
-font-size:14px;
-}
-
-.info:last-child{
-border-bottom:0;
-}
-
-.actions{
-display:flex;
-gap:6px;
-flex-wrap:wrap;
-margin-top:12px;
-}
-
-.badge{
-display:inline-block;
-padding:5px 9px;
-border-radius:20px;
-font-size:12px;
-}
-
-.paid{
-background:#d8f5df;
-color:#167331;
-}
-
-.debt{
-background:#ffe0e0;
-color:#a00000;
-}
-
-.empty{
-padding:35px;
-text-align:center;
-color:#999;
-background:#fafafa;
-border-radius:12px;
-}
-
-.detail-box{
-line-height:1.8;
-}
-
-.modal{
-position:fixed;
-inset:0;
-background:#0008;
-display:none;
-align-items:center;
-justify-content:center;
-padding:20px;
-z-index:100;
-}
-
-.modal.show{
-display:flex;
-}
-
-.modal-content{
-background:white;
-width:100%;
-max-width:500px;
-border-radius:18px;
-padding:22px;
-max-height:90vh;
-overflow:auto;
-}
-
-@media(max-width:800px){
-
-.dashboard{
-grid-template-columns:repeat(2,1fr);
-}
-
-.cards{
-grid-template-columns:1fr;
-}
-
-.form-grid{
-grid-template-columns:1fr;
-}
-
-}
-
-@media(max-width:500px){
-
-.container{
-padding:10px;
-}
-
-.stat{
-padding:12px;
-}
-
-.stat-value{
-font-size:20px;
-}
-
-.panel{
-padding:14px;
-}
-
-}
+body{margin:0;font-family:Arial,"Noto Sans Thai",sans-serif;background:#f3f5f7;color:#222}
+header{background:linear-gradient(135deg,#111,#333);color:#fff;padding:16px;position:sticky;top:0;z-index:20}
+.header{max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:23px;font-weight:bold}.logo span{color:#ff8500}
+.container{max-width:1200px;margin:auto;padding:15px}
+.dashboard{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+.stat,.panel,.item-card{background:#fff;border-radius:15px;box-shadow:0 3px 12px #0001}
+.stat{padding:17px}.stat-title{font-size:14px;color:#777}.stat-value{font-size:25px;font-weight:bold;margin-top:7px}
+.red{color:#d62828}.green{color:#16833a}.orange{color:#e87500}.blue{color:#1769aa}
+.tabs{display:flex;gap:7px;overflow-x:auto;margin-bottom:15px}.tab{background:#fff;border:0;padding:11px 15px;border-radius:10px;white-space:nowrap;cursor:pointer;font-weight:bold}.tab.active{background:#ff7a00;color:#fff}
+.section{display:none}.section.active{display:block}.panel{padding:20px;margin-bottom:18px}.panel h2{margin-top:0}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+label{display:block;font-size:14px;margin-bottom:5px;font-weight:bold}
+input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:9px;font-size:15px}
+button{border:0;border-radius:9px;padding:10px 14px;font-weight:bold;cursor:pointer}
+.btn{background:#ff7a00;color:#fff}.btn-green{background:#198754;color:#fff}.btn-red{background:#dc3545;color:#fff}.btn-blue{background:#1769aa;color:#fff}.btn-dark{background:#222;color:#fff}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.item-card{padding:15px;box-shadow:0 2px 8px #0000000d}
+.item-card h3{margin:0 0 10px}.info{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f0f0f0;font-size:14px;gap:10px}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.job-box{border:2px solid #eee;border-radius:15px;padding:15px;margin-bottom:12px;background:#fafafa}.job-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.job-number{font-weight:bold;color:#ff7a00;font-size:17px}.remove-job{background:#dc3545;color:#fff;padding:7px 10px}.add-job{width:100%;background:#fff;border:2px dashed #ff7a00;color:#ff7a00;padding:13px;font-size:16px}
+.job-total{background:#fff3e8;border-radius:10px;padding:12px;margin-top:12px;text-align:right;font-size:18px;font-weight:bold}
+.total-box,.payment-summary{background:#222;color:#fff;border-radius:15px;padding:20px;margin-top:15px}.total-row,.payment-summary-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #ffffff22}.total-row:last-child,.payment-summary-row:last-child{border:0}.total-main{font-size:24px;font-weight:bold}.payment-debt{font-size:27px;font-weight:bold;color:#ffb000}
+.empty{padding:35px;text-align:center;color:#999;background:#fafafa;border-radius:12px}.edit-banner{background:#fff3cd;border:1px solid #ffe08a;padding:12px;border-radius:10px;margin-bottom:15px;display:none}
+.status{position:fixed;bottom:15px;right:15px;padding:10px 15px;border-radius:30px;background:#222;color:#fff;font-size:13px;z-index:50}
+.online-box{display:none;margin-top:18px;padding:18px;border-radius:15px;background:#f7f9fb;border:1px solid #ddd;text-align:center}
+.qr{width:280px;height:280px;margin:15px auto;background:#fff;border:1px solid #ddd;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.qr img{max-width:100%;max-height:100%;object-fit:contain}.note{font-size:13px;color:#666}.danger-note{margin-top:12px;background:#fff3cd;color:#856404;padding:10px;border-radius:8px}
+@media(max-width:1000px){.dashboard{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:800px){.dashboard{grid-template-columns:repeat(2,1fr)}.cards,.form-grid{grid-template-columns:1fr}}
+@media(max-width:500px){.dashboard{grid-template-columns:1fr 1fr}.stat-value{font-size:20px}}
 </style>
 </head>
-
 <body>
-
-<header>
-
-<div class="header">
-
-<div class="logo">
-NAK <span>FARM</span> ACCOUNT
-</div>
-
-<div id="dateNow"></div>
-
-</div>
-
-</header>
-
+<header><div class="header"><div class="logo">NAK <span>FARM</span> ACCOUNT</div><div id="today"></div></div></header>
 <div class="container">
 
-<!-- DASHBOARD -->
-
 <div class="dashboard">
-
-<div class="stat">
-<div class="stat-title">💰 ยอดหนี้</div>
-<div class="stat-value red" id="dashDebt">฿0</div>
+<div class="stat"><div class="stat-title">🔴 ลูกหนี้คงเหลือ</div><div class="stat-value red" id="dashDebt">฿0</div></div>
+<div class="stat"><div class="stat-title">💵 จ่ายแล้ว</div><div class="stat-value green" id="dashPaid">฿0</div></div>
+<div class="stat"><div class="stat-title">📈 รายรับ</div><div class="stat-value blue" id="dashIncome">฿0</div></div>
+<div class="stat"><div class="stat-title">📉 รายจ่าย</div><div class="stat-value orange" id="dashExpense">฿0</div></div>
+<div class="stat"><div class="stat-title">💰 กำไรสุทธิ</div><div class="stat-value green" id="dashProfit">฿0</div></div>
 </div>
-
-<div class="stat">
-<div class="stat-title">💵 รับเงินแล้ว</div>
-<div class="stat-value green" id="dashPaid">฿0</div>
-</div>
-
-<div class="stat">
-<div class="stat-title">📈 รายรับ</div>
-<div class="stat-value blue" id="dashIncome">฿0</div>
-</div>
-
-<div class="stat">
-<div class="stat-title">💸 ค่าใช้จ่าย</div>
-<div class="stat-value orange" id="dashExpense">฿0</div>
-</div>
-
-</div>
-
-<!-- MENU -->
 
 <div class="tabs">
-
-<button class="tab active" onclick="openTab('home',this)">
-📊 ภาพรวม
-</button>
-
-<button class="tab" onclick="openTab('customer',this)">
-👨‍🌾 ลูกค้า
-</button>
-
-<button class="tab" onclick="openTab('job',this)">
-🚜 งานรับจ้าง
-</button>
-
-<button class="tab" onclick="openTab('fuel',this)">
-⛽ น้ำมัน
-</button>
-
-<button class="tab" onclick="openTab('money',this)">
-💰 การเงิน
-</button>
-
-<button class="tab" onclick="openTab('payment',this)">
-📱 ชำระเงิน
-</button>
-
+<button class="tab active" onclick="openTab('home',this)">📊 ภาพรวม</button>
+<button class="tab" onclick="openTab('customer',this)">📝 ลูกค้า + งาน</button>
+<button class="tab" onclick="openTab('customerList',this)">👨‍🌾 ลูกค้าทั้งหมด</button>
+<button class="tab" onclick="openTab('fuel',this)">⛽ น้ำมัน</button>
+<button class="tab" onclick="openTab('money',this)">💰 การเงิน</button>
+<button class="tab" onclick="openTab('payment',this)">💳 ชำระเงิน</button>
 </div>
-
-
-<!-- HOME -->
 
 <div id="home" class="section active">
-
-<div class="panel">
-
-<h2>📊 ภาพรวมกิจการ</h2>
-
-<div id="homeSummary"></div>
-
+<div class="panel"><h2>📊 ภาพรวมกิจการ</h2><div id="summary"></div></div>
+<div class="panel"><h2>💰 สรุปการเงิน</h2><div class="cards">
+<div class="item-card"><h3>📈 รายรับ</h3><div class="stat-value blue" id="summaryIncome">฿0</div></div>
+<div class="item-card"><h3>📉 รายจ่าย</h3><div class="stat-value red" id="summaryExpense">฿0</div></div>
+<div class="item-card"><h3>💰 กำไรสุทธิ</h3><div class="stat-value green" id="summaryProfit">฿0</div></div>
+</div></div>
 </div>
-
-<div class="panel">
-
-<h2>🕐 รายการล่าสุด</h2>
-
-<div id="latestList"></div>
-
-</div>
-
-</div>
-
-
-<!-- CUSTOMER -->
 
 <div id="customer" class="section">
-
 <div class="panel">
-
-<h2>👨‍🌾 เพิ่มลูกค้า</h2>
-
+<h2 id="customerFormTitle">📝 บันทึกลูกค้า + งาน</h2>
+<div id="editBanner" class="edit-banner">✏️ กำลังแก้ไขข้อมูลลูกค้า</div>
+<div style="background:#fff7ed;padding:15px;border-radius:12px;margin-bottom:18px">
+<label>👨‍🌾 เลือกลูกค้าเดิม</label><select id="existingCustomer" onchange="selectExistingCustomer()"><option value="">-- ลูกค้าใหม่ --</option></select>
+</div>
+<h3>👨‍🌾 ข้อมูลลูกค้า</h3>
 <div class="form-grid">
-
-<div>
-<label>ชื่อลูกค้า</label>
-<input id="cName" placeholder="เช่น นายสมชาย">
+<div><label>ชื่อลูกค้า *</label><input id="cName" placeholder="เช่น นายสมชาย ใจดี"></div>
+<div><label>เบอร์โทร</label><input id="cPhone" placeholder="08xxxxxxxx"></div>
+<div><label>ที่อยู่</label><input id="cAddress" placeholder="บ้าน / หมู่ / ตำบล"></div>
+<div><label>หมายเหตุ</label><input id="cNote" placeholder="ข้อมูลเพิ่มเติม"></div>
 </div>
+<hr style="border:0;border-top:1px solid #eee;margin:25px 0">
+<div style="display:flex;justify-content:space-between;align-items:center"><h3>🚜 รายการจ้างงาน</h3><span id="jobCount">1 รายการ</span></div>
+<div id="jobContainer"></div>
+<button class="add-job" onclick="addJobRow()">➕ เพิ่มงานอีก 1 รายการ</button>
+<div class="total-box">
+<div class="total-row"><span>ยอดงานทั้งหมด</span><strong id="formTotal">฿0</strong></div>
+<div class="total-row"><span>จ่ายแล้ว</span><strong id="formPaid">฿0</strong></div>
+<div class="total-row total-main"><span>ค้างชำระ</span><strong id="formDebt">฿0</strong></div>
+</div><br>
+<button id="saveCustomerButton" class="btn-green" style="width:100%;font-size:17px;padding:15px" onclick="saveCustomerAndJobs()">💾 บันทึกลูกค้าและงานทั้งหมด</button>
+<br><br><button id="cancelEditButton" class="btn-dark" style="width:100%;display:none" onclick="cancelEdit()">ยกเลิกการแก้ไข</button>
+</div></div>
 
-<div>
-<label>เบอร์โทร</label>
-<input id="cPhone" placeholder="08xxxxxxxx">
-</div>
-
-<div>
-<label>ที่อยู่</label>
-<input id="cAddress" placeholder="บ้าน/ตำบล">
-</div>
-
-<div>
-<label>หมายเหตุ</label>
-<input id="cNote" placeholder="หมายเหตุ">
-</div>
-
-</div>
-
-<br>
-
-<button class="btn" onclick="addCustomer()">
-+ เพิ่มลูกค้า
-</button>
-
-</div>
-
-<div class="panel">
-
-<h2>📋 รายชื่อลูกค้า</h2>
-
-<div id="customerList" class="cards"></div>
-
-</div>
-
-</div>
-
-
-<!-- JOB -->
-
-<div id="job" class="section">
-
-<div class="panel">
-
-<h2>🚜 เพิ่มงานรับจ้าง</h2>
-
-<div class="form-grid">
-
-<div>
-<label>ลูกค้า</label>
-<select id="jCustomer"></select>
-</div>
-
-<div>
-<label>วันที่</label>
-<input type="date" id="jDate">
-</div>
-
-<div>
-<label>ประเภทงาน</label>
-<select id="jType">
-<option>เกี่ยวข้าว</option>
-<option>ไถนา</option>
-<option>ดำนา</option>
-<option>หว่านข้าว</option>
-<option>ขนข้าว</option>
-<option>อื่นๆ</option>
-</select>
-</div>
-
-<div>
-<label>จำนวนไร่</label>
-<input type="number" id="jRai">
-</div>
-
-<div>
-<label>ราคา/ไร่</label>
-<input type="number" id="jPrice">
-</div>
-
-<div>
-<label>รับเงินแล้ว</label>
-<input type="number" id="jPaid" value="0">
-</div>
-
-</div>
-
-<br>
-
-<button class="btn" onclick="addJob()">
-+ บันทึกงาน
-</button>
-
-</div>
-
-<div class="panel">
-
-<h2>📋 งานรับจ้างทั้งหมด</h2>
-
-<div id="jobList" class="cards"></div>
-
-</div>
-
-</div>
-
-
-<!-- FUEL -->
+<div id="customerList" class="section"><div class="panel"><h2>👨‍🌾 ลูกค้าทั้งหมด</h2><div id="customerCards" class="cards"></div></div></div>
 
 <div id="fuel" class="section">
-
-<div class="panel">
-
-<h2>⛽ บันทึกน้ำมัน</h2>
-
+<div class="panel"><h2>⛽ บันทึกการซื้อน้ำมัน</h2>
 <div class="form-grid">
-
-<div>
-<label>วันที่</label>
-<input type="date" id="fDate">
+<div><label>วันที่ซื้อ</label><input type="date" id="fDate"></div>
+<div><label>เครื่องจักร</label><input id="fMachine" placeholder="เช่น DC70G / L5228"></div>
+<div><label>จำนวนลิตร</label><input type="number" id="fLiter" step="0.01" min="0"></div>
+<div><label>ราคาต่อลิตร</label><input type="number" id="fPrice" step="0.01" min="0"></div>
+</div><br><button class="btn" onclick="addFuel()">+ บันทึกการซื้อน้ำมัน</button>
 </div>
-
-<div>
-<label>เครื่องจักร</label>
-<select id="fMachine">
-<option>Kubota DC70G PRO</option>
-<option>Kubota L5228</option>
-<option>รถไถ</option>
-<option>รถกระบะ</option>
-<option>อื่นๆ</option>
-</select>
+<div class="panel"><h2>⛽ ประวัติการซื้อน้ำมัน</h2><div id="fuelList" class="cards"></div></div>
 </div>
-
-<div>
-<label>จำนวนลิตร</label>
-<input type="number" id="fLiter">
-</div>
-
-<div>
-<label>ราคาต่อลิตร</label>
-<input type="number" id="fPrice">
-</div>
-
-</div>
-
-<br>
-
-<button class="btn" onclick="addFuel()">
-+ บันทึกน้ำมัน
-</button>
-
-</div>
-
-<div class="panel">
-
-<h2>⛽ รายการน้ำมัน</h2>
-
-<div id="fuelList" class="cards"></div>
-
-</div>
-
-</div>
-
-
-<!-- MONEY -->
 
 <div id="money" class="section">
-
-<div class="panel">
-
-<h2>💰 รายรับ / รายจ่าย</h2>
-
+<div class="panel"><h2>💰 รายรับ / รายจ่ายอื่น</h2>
 <div class="form-grid">
-
-<div>
-<label>วันที่</label>
-<input type="date" id="mDate">
+<div><label>วันที่</label><input type="date" id="mDate"></div>
+<div><label>ประเภท</label><select id="mType"><option value="income">📈 รายรับ</option><option value="expense">📉 รายจ่าย</option></select></div>
+<div><label>รายการ</label><input id="mDetail" placeholder="เช่น ค่าซ่อมรถ"></div>
+<div><label>จำนวนเงิน</label><input type="number" id="mAmount" step="0.01" min="0"></div>
+</div><br><button class="btn" onclick="addMoney()">+ บันทึกการเงิน</button>
 </div>
-
-<div>
-<label>ประเภท</label>
-
-<select id="mType">
-
-<option value="income">
-รายรับ
-</option>
-
-<option value="expense">
-รายจ่าย
-</option>
-
-</select>
-
+<div class="panel"><h2>📋 รายการการเงิน</h2><div id="moneyList" class="cards"></div></div>
 </div>
-
-<div>
-<label>รายการ</label>
-<input id="mDetail" placeholder="เช่น ค่าซ่อมรถ">
-</div>
-
-<div>
-<label>จำนวนเงิน</label>
-<input type="number" id="mAmount">
-</div>
-
-</div>
-
-<br>
-
-<button class="btn" onclick="addMoney()">
-+ บันทึกรายการ
-</button>
-
-</div>
-
-<div class="panel">
-
-<h2>📋 รายการการเงิน</h2>
-
-<div id="moneyList" class="cards"></div>
-
-</div>
-
-</div>
-
-
-<!-- PAYMENT -->
 
 <div id="payment" class="section">
-
-<div class="panel">
-
-<h2>📱 บันทึกการชำระเงิน</h2>
-
+<div class="panel"><h2>💳 รับชำระเงิน</h2>
 <div class="form-grid">
-
-<div>
-<label>ลูกค้า</label>
-<select id="pCustomer"></select>
+<div><label>ลูกค้า</label><select id="pCustomer" onchange="showPaymentCustomer()"><option value="">-- เลือกลูกค้า --</option></select></div>
+<div><label>จำนวนเงินที่รับ</label><input type="number" id="pAmount" min="0" placeholder="เช่น 5000" oninput="checkPaymentAmount()"></div>
+</div>
+<div id="paymentCustomerSummary" class="payment-summary" style="display:none">
+<div class="payment-summary-row"><span>ยอดงานทั้งหมด</span><strong id="pTotal">฿0</strong></div>
+<div class="payment-summary-row"><span>จ่ายแล้ว</span><strong id="pPaid">฿0</strong></div>
+<div class="payment-summary-row"><span>🔴 ค้างชำระ</span><strong id="pDebt" class="payment-debt">฿0</strong></div>
+<div id="paymentWarning" class="danger-note" style="display:none"></div>
+</div><br>
+<button id="paymentSaveButton" class="btn-green" style="width:100%;font-size:17px;padding:15px" onclick="savePayment()">✓ บันทึกการชำระเงิน</button>
+<button id="paymentCancelButton" class="btn-dark" style="width:100%;margin-top:8px;display:none" onclick="cancelPaymentEdit()">ยกเลิกการแก้ไข</button>
 </div>
 
-<div>
-<label>จำนวนเงิน</label>
-<input type="number" id="pAmount">
+<div class="panel"><h2>📱 ชำระเงินออนไลน์</h2>
+<div class="form-grid">
+<div><label>ลูกค้า</label><select id="onlineCustomer" onchange="syncOnlineDebt()"><option value="">-- เลือกลูกค้า --</option></select></div>
+<div><label>จำนวนเงิน</label><input type="number" id="onlineAmount" min="1" step="0.01" placeholder="เช่น 5000"></div>
+</div>
+<div class="note" style="margin-top:10px">QR ด้านล่างเป็น QR ที่คุณนำมาใส่เอง ระบบจะสร้างรายการ “รอตรวจสอบ” ให้ก่อน ยังไม่ถือว่าเงินเข้าอัตโนมัติจนกว่าจะเชื่อม Bank API/Webhook</div>
+<br><button class="btn-blue" style="width:100%;padding:15px;font-size:17px" onclick="createOnlinePayment()">📱 สร้างรายการชำระออนไลน์</button>
+<div id="onlinePaymentBox" class="online-box">
+<h3>📱 QR สำหรับชำระเงิน</h3>
+<div id="qrCode" class="qr">
+    <img
+        id="promptpayQR"
+        src="promptpay-qr.png"
+        alt="QR พร้อมเพย์"
+        style="
+            width:260px;
+            max-width:100%;
+            border-radius:12px;
+            display:block;
+            margin:auto;
+        "
+    >
+
+    <p style="text-align:center;margin-top:10px;color:#666">
+        📱 สแกน QR เพื่อชำระเงิน
+    </p>
+</div>
+<div id="onlinePaymentInfo"></div><br>
+<button class="btn-green" onclick="confirmOnlinePaymentManually()">✓ ตรวจสอบแล้ว / รับเงินแล้ว</button>
+</div>
 </div>
 
-</div>
-
-<br>
-
-<button class="btn-green" onclick="addPayment()">
-✓ บันทึกการชำระ
-</button>
-
-</div>
-
-<div class="panel">
-
-<h2>💳 ประวัติการชำระ</h2>
-
-<div id="paymentList" class="cards"></div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- DETAIL MODAL -->
-
-<div id="detailModal" class="modal">
-
-<div class="modal-content">
-
-<h2 id="modalTitle"></h2>
-
-<div id="modalBody"></div>
-
-<br>
-
-<button class="btn-dark"
-onclick="closeModal()">
-ปิด
-</button>
+<div class="panel"><h2>📋 ประวัติการชำระเงิน</h2><div id="paymentList" class="cards"></div></div>
+<div class="panel"><h2>📱 ประวัติการชำระออนไลน์</h2><div id="onlinePaymentHistory" class="cards"></div></div>
 
 </div>
 
 </div>
-
-
+<div id="status" class="status">กำลังเชื่อมต่อ...</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL="https://mpnegrefmciqxcybbinx.supabase.co";
+const SUPABASE_KEY="sb_publishable_qecRj2d_rtaoiDAfv2Gf7A_LuBLJ8MR";
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-/* =========================
-DATA
-========================= */
+let customers=[],jobs=[],fuels=[],money=[],payments=[];
+let editingCustomerId=null,editingPaymentId=null;
+let onlinePending=null;
 
-let customers =
-JSON.parse(localStorage.getItem("nak_customers")||"[]");
-
-let jobs =
-JSON.parse(localStorage.getItem("nak_jobs")||"[]");
-
-let fuels =
-JSON.parse(localStorage.getItem("nak_fuels")||"[]");
-
-let money =
-JSON.parse(localStorage.getItem("nak_money")||"[]");
-
-let payments =
-JSON.parse(localStorage.getItem("nak_payments")||"[]");
-
-
-function save(){
-
-localStorage.setItem(
-"nak_customers",
-JSON.stringify(customers)
-);
-
-localStorage.setItem(
-"nak_jobs",
-JSON.stringify(jobs)
-);
-
-localStorage.setItem(
-"nak_fuels",
-JSON.stringify(fuels)
-);
-
-localStorage.setItem(
-"nak_money",
-JSON.stringify(money)
-);
-
-localStorage.setItem(
-"nak_payments",
-JSON.stringify(payments)
-);
-
-render();
-
+const $=id=>document.getElementById(id);
+function baht(n){return "฿"+Number(n||0).toLocaleString("th-TH",{minimumFractionDigits:0,maximumFractionDigits:2})}
+function today(){return new Date().toISOString().substring(0,10)}
+function setStatus(t){$("status").innerText=t}
+function escapeHtml(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function customerName(id){const c=customers.find(x=>String(x.id)===String(id));return c?c.name:"-"}
+function getCustomerSummary(id){
+ let total=0,paid=0;
+ const cj=jobs.filter(j=>String(j.customer_id)===String(id));
+ cj.forEach(j=>{total+=Number(j.quantity??j.rai??0)*Number(j.price??j.price_per_rai??0);paid+=Number(j.paid||0)});
+ return {jobs:cj,total,paid,debt:Math.max(total-paid,0)}
 }
 
-
-function today(){
-
-return new Date()
-.toISOString()
-.substring(0,10);
-
+function addJobRow(data={}){
+ const container=$("jobContainer"),index=container.children.length+1,box=document.createElement("div");
+ box.className="job-box";if(data.id)box.dataset.jobId=data.id;
+ box.innerHTML=`<div class="job-head"><div class="job-number">🚜 งานที่ ${index}</div><button class="remove-job" onclick="removeJobRow(this)">🗑️ ลบงาน</button></div>
+ <div class="form-grid">
+ <div><label>ประเภทงาน</label><select class="job-type"><option value="เกี่ยวข้าว">🌾 เกี่ยวข้าว</option><option value="ไถนา">🚜 ไถนา</option><option value="หว่านข้าว">🌱 หว่านข้าว</option><option value="ดำนา">🌱 ดำนา</option><option value="ขนข้าว">🚛 ขนข้าว</option><option value="อื่นๆ">🔧 อื่นๆ</option></select></div>
+ <div><label>วันที่</label><input type="date" class="job-date" value="${data.job_date||today()}"></div>
+ <div><label>จำนวน</label><input type="number" class="job-quantity" min="0" value="${data.quantity??data.rai??""}" oninput="calculateForm()"></div>
+ <div><label>หน่วย</label><select class="job-unit"><option value="ไร่">ไร่</option><option value="เที่ยว">เที่ยว</option><option value="ตัน">ตัน</option><option value="งาน">งาน</option><option value="ครั้ง">ครั้ง</option></select></div>
+ <div><label>ราคา / หน่วย</label><input type="number" class="job-price" min="0" value="${data.price??data.price_per_rai??""}" oninput="calculateForm()"></div>
+ <div><label>จ่ายแล้ว</label><input type="number" class="job-paid" min="0" value="${data.paid??0}" oninput="calculateForm()"></div>
+ </div><div class="job-total">รวมงานนี้: <span class="row-total">฿0</span></div>`;
+ container.appendChild(box);
+ if(data.job_type)box.querySelector(".job-type").value=data.job_type;
+ if(data.unit)box.querySelector(".job-unit").value=data.unit;
+ calculateForm();renumberJobs();
+}
+function removeJobRow(btn){const rows=document.querySelectorAll(".job-box");if(rows.length<=1)return alert("ต้องมีงานอย่างน้อย 1 รายการ");btn.closest(".job-box").remove();renumberJobs();calculateForm()}
+function renumberJobs(){document.querySelectorAll(".job-box").forEach((b,i)=>b.querySelector(".job-number").innerText="🚜 งานที่ "+(i+1));$("jobCount").innerText=document.querySelectorAll(".job-box").length+" รายการ"}
+function calculateForm(){
+ let total=0,paid=0;
+ document.querySelectorAll(".job-box").forEach(b=>{const q=Number(b.querySelector(".job-quantity").value)||0,p=Number(b.querySelector(".job-price").value)||0,x=Number(b.querySelector(".job-paid").value)||0,r=q*p;total+=r;paid+=x;b.querySelector(".row-total").innerText=baht(r)});
+ $("formTotal").innerText=baht(total);$("formPaid").innerText=baht(paid);$("formDebt").innerText=baht(Math.max(total-paid,0));
 }
 
-
-function baht(n){
-
-return "฿"+Number(n||0)
-.toLocaleString("th-TH");
-
+async function loadData(){
+ setStatus("กำลังโหลดข้อมูล...");
+ const c=await supabaseClient.from("customers").select("*").order("created_at",{ascending:false});
+ if(c.error)return alert("โหลดลูกค้าไม่ได้\n\n"+c.error.message);
+ customers=c.data||[];
+ const j=await supabaseClient.from("jobs").select("*").order("job_date",{ascending:false});
+ if(j.error)return alert("โหลดงานไม่ได้\n\n"+j.error.message);
+ jobs=j.data||[];
+ const f=await supabaseClient.from("fuels").select("*").order("fuel_date",{ascending:false});
+ fuels=f.error?[]:(f.data||[]);
+ const m=await supabaseClient.from("money").select("*").order("money_date",{ascending:false});
+ money=m.error?[]:(m.data||[]);
+ const p=await supabaseClient.from("payments").select("*").order("payment_date",{ascending:false});
+ if(p.error)return alert("โหลดการชำระไม่ได้\n\n"+p.error.message);
+ payments=p.data||[];
+ render();setStatus("🟢 เชื่อมต่อฐานข้อมูลแล้ว");
 }
 
-
-/* =========================
-TAB
-========================= */
-
-function openTab(id,btn){
-
-document
-.querySelectorAll(".section")
-.forEach(x=>x.classList.remove("active"));
-
-document
-.querySelectorAll(".tab")
-.forEach(x=>x.classList.remove("active"));
-
-document.getElementById(id)
-.classList.add("active");
-
-btn.classList.add("active");
-
+function renderCustomerSelects(){
+ let chtml='<option value="">-- ลูกค้าใหม่ --</option>',ph='<option value="">-- เลือกลูกค้า --</option>';
+ customers.forEach(c=>{chtml+=`<option value="${c.id}">${escapeHtml(c.name)}${c.phone?" - "+escapeHtml(c.phone):""}</option>`;ph+=`<option value="${c.id}">${escapeHtml(c.name)}</option>`});
+ $("existingCustomer").innerHTML=chtml;$("pCustomer").innerHTML=ph;$("onlineCustomer").innerHTML=ph;
 }
-
-
-/* =========================
-CUSTOMER
-========================= */
-
-function addCustomer(){
-
-let name=
-document.getElementById("cName").value.trim();
-
-if(!name){
-
-alert("กรุณากรอกชื่อลูกค้า");
-
-return;
-
-}
-
-customers.push({
-
-id:Date.now(),
-
-name:name,
-
-phone:document.getElementById("cPhone").value,
-
-address:document.getElementById("cAddress").value,
-
-note:document.getElementById("cNote").value
-
-});
-
-document.getElementById("cName").value="";
-document.getElementById("cPhone").value="";
-document.getElementById("cAddress").value="";
-document.getElementById("cNote").value="";
-
-save();
-
-}
-
-
-/* =========================
-JOB
-========================= */
-
-function addJob(){
-
-let cid=
-Number(document.getElementById("jCustomer").value);
-
-if(!cid){
-
-alert("กรุณาเลือกลูกค้า");
-
-return;
-
-}
-
-let rai=
-Number(document.getElementById("jRai").value);
-
-let price=
-Number(document.getElementById("jPrice").value);
-
-let paid=
-Number(document.getElementById("jPaid").value)||0;
-
-if(!rai||!price){
-
-alert("กรุณากรอกจำนวนไร่และราคา");
-
-return;
-
-}
-
-let total=rai*price;
-
-jobs.push({
-
-id:Date.now(),
-
-customerId:cid,
-
-date:
-document.getElementById("jDate").value||today(),
-
-type:
-document.getElementById("jType").value,
-
-rai:rai,
-
-price:price,
-
-total:total,
-
-paid:paid,
-
-debt:Math.max(total-paid,0)
-
-});
-
-save();
-
-}
-
-
-/* =========================
-FUEL
-========================= */
-
-function addFuel(){
-
-let liter=
-Number(document.getElementById("fLiter").value);
-
-let price=
-Number(document.getElementById("fPrice").value);
-
-if(!liter||!price){
-
-alert("กรุณากรอกข้อมูลน้ำมัน");
-
-return;
-
-}
-
-fuels.push({
-
-id:Date.now(),
-
-date:
-document.getElementById("fDate").value||today(),
-
-machine:
-document.getElementById("fMachine").value,
-
-liter:liter,
-
-price:price,
-
-total:liter*price
-
-});
-
-save();
-
-}
-
-
-/* =========================
-MONEY
-========================= */
-
-function addMoney(){
-
-let amount=
-Number(document.getElementById("mAmount").value);
-
-let detail=
-document.getElementById("mDetail").value;
-
-if(!amount||!detail){
-
-alert("กรุณากรอกข้อมูลให้ครบ");
-
-return;
-
-}
-
-money.push({
-
-id:Date.now(),
-
-date:
-document.getElementById("mDate").value||today(),
-
-type:
-document.getElementById("mType").value,
-
-detail:detail,
-
-amount:amount
-
-});
-
-save();
-
-}
-
-
-/* =========================
-PAYMENT
-========================= */
-
-function addPayment(){
-
-let cid=
-Number(document.getElementById("pCustomer").value);
-
-let amount=
-Number(document.getElementById("pAmount").value);
-
-if(!cid||!amount){
-
-alert("กรุณากรอกข้อมูลให้ครบ");
-
-return;
-
-}
-
-payments.push({
-
-id:Date.now(),
-
-customerId:cid,
-
-amount:amount,
-
-date:today()
-
-});
-
-
-/* ตัดยอดหนี้จากงานเก่า */
-
-let remaining=amount;
-
-jobs
-.filter(x=>
-x.customerId===cid &&
-x.debt>0
-)
-.forEach(j=>{
-
-if(remaining<=0)return;
-
-let cut=
-Math.min(j.debt,remaining);
-
-j.paid+=cut;
-
-j.debt-=cut;
-
-remaining-=cut;
-
-});
-
-save();
-
-document.getElementById("pAmount").value="";
-
-alert("บันทึกการชำระเงินเรียบร้อย");
-
-}
-
-
-/* =========================
-DELETE
-========================= */
-
-function remove(type,id){
-
-if(!confirm("ต้องการลบรายการนี้หรือไม่?"))
-return;
-
-if(type==="customer")
-customers=
-customers.filter(x=>x.id!==id);
-
-if(type==="job")
-jobs=
-jobs.filter(x=>x.id!==id);
-
-if(type==="fuel")
-fuels=
-fuels.filter(x=>x.id!==id);
-
-if(type==="money")
-money=
-money.filter(x=>x.id!==id);
-
-if(type==="payment")
-payments=
-payments.filter(x=>x.id!==id);
-
-save();
-
-}
-
-
-/* =========================
-EDIT
-========================= */
-
-function editCustomer(id){
-
-let c=customers.find(x=>x.id===id);
-
-if(!c)return;
-
-let name=prompt("ชื่อลูกค้า",c.name);
-
-if(name===null)return;
-
-let phone=prompt("เบอร์โทร",c.phone||"");
-
-c.name=name;
-
-c.phone=phone;
-
-save();
-
-}
-
-
-function editJob(id){
-
-let j=jobs.find(x=>x.id===id);
-
-if(!j)return;
-
-let paid=prompt(
-"จำนวนเงินที่ลูกค้าจ่ายแล้ว",
-j.paid
-);
-
-if(paid===null)return;
-
-paid=Number(paid);
-
-j.paid=paid;
-
-j.debt=
-Math.max(j.total-paid,0);
-
-save();
-
-}
-
-
-function editFuel(id){
-
-let f=fuels.find(x=>x.id===id);
-
-if(!f)return;
-
-let liter=prompt(
-"จำนวนลิตร",
-f.liter
-);
-
-if(liter===null)return;
-
-let price=prompt(
-"ราคาต่อลิตร",
-f.price
-);
-
-if(price===null)return;
-
-f.liter=Number(liter);
-
-f.price=Number(price);
-
-f.total=f.liter*f.price;
-
-save();
-
-}
-
-
-function editMoney(id){
-
-let m=money.find(x=>x.id===id);
-
-if(!m)return;
-
-let detail=prompt(
-"รายการ",
-m.detail
-);
-
-if(detail===null)return;
-
-let amount=prompt(
-"จำนวนเงิน",
-m.amount
-);
-
-if(amount===null)return;
-
-m.detail=detail;
-
-m.amount=Number(amount);
-
-save();
-
-}
-
-
-/* =========================
-DETAIL
-========================= */
-
-function detail(title,body){
-
-document.getElementById("modalTitle")
-.innerText=title;
-
-document.getElementById("modalBody")
-.innerHTML=body;
-
-document.getElementById("detailModal")
-.classList.add("show");
-
-}
-
-
-function closeModal(){
-
-document
-.getElementById("detailModal")
-.classList.remove("show");
-
-}
-
-
-/* =========================
-RENDER CUSTOMER
-========================= */
-
 function renderCustomers(){
-
-let html="";
-
-customers
-.slice()
-.reverse()
-.forEach(c=>{
-
-let cj=
-jobs.filter(j=>j.customerId===c.id);
-
-let debt=
-cj.reduce((s,j)=>s+j.debt,0);
-
-let paid=
-cj.reduce((s,j)=>s+j.paid,0);
-
-html+=`
-
-<div class="item-card">
-
-<h3>👨‍🌾 ${c.name}</h3>
-
-<div class="info">
-<span>📞 โทร</span>
-<b>${c.phone||"-"}</b>
-</div>
-
-<div class="info">
-<span>🚜 งาน</span>
-<b>${cj.length} งาน</b>
-</div>
-
-<div class="info">
-<span>💵 ชำระแล้ว</span>
-<b class="green">${baht(paid)}</b>
-</div>
-
-<div class="info">
-<span>🔴 ค้าง</span>
-<b class="red">${baht(debt)}</b>
-</div>
-
-<div class="actions">
-
-<button class="btn-blue"
-onclick="showCustomer(${c.id})">
-รายละเอียด
-</button>
-
-<button class="btn"
-onclick="editCustomer(${c.id})">
-แก้ไข
-</button>
-
-<button class="btn-red"
-onclick="remove('customer',${c.id})">
-ลบ
-</button>
-
-</div>
-
-</div>
-
-`;
-
-});
-
-document.getElementById("customerList").innerHTML=
-html||
-'<div class="empty">ยังไม่มีลูกค้า</div>';
-
+ let h="";customers.forEach(c=>{const s=getCustomerSummary(c.id);h+=`<div class="item-card"><h3>👨‍🌾 ${escapeHtml(c.name)}</h3>
+ <div class="info"><span>📞 โทร</span><b>${escapeHtml(c.phone||"-")}</b></div><div class="info"><span>🚜 งาน</span><b>${s.jobs.length} รายการ</b></div>
+ <div class="info"><span>💰 ยอดรวม</span><b>${baht(s.total)}</b></div><div class="info"><span>💵 จ่ายแล้ว</span><b class="green">${baht(s.paid)}</b></div>
+ <div class="info"><span>🔴 ค้าง</span><b class="${s.debt>0?"red":"green"}">${baht(s.debt)}</b></div>
+ <div class="actions"><button class="btn" onclick="editCustomer('${c.id}')">✏️ แก้ไข</button><button class="btn-red" onclick="deleteCustomer('${c.id}')">🗑️ ลบ</button></div></div>`});
+ $("customerCards").innerHTML=h||'<div class="empty">ยังไม่มีลูกค้า</div>';
 }
 
-
-/* =========================
-CUSTOMER DETAIL
-========================= */
-
-function showCustomer(id){
-
-let c=customers.find(x=>x.id===id);
-
-let cj=jobs.filter(x=>x.customerId===id);
-
-let debt=
-cj.reduce((s,x)=>s+x.debt,0);
-
-let paid=
-cj.reduce((s,x)=>s+x.paid,0);
-
-detail(
-"👨‍🌾 "+c.name,
-
-`
-
-<div class="detail-box">
-
-<p>📞 เบอร์โทร: <b>${c.phone||"-"}</b></p>
-
-<p>📍 ที่อยู่: <b>${c.address||"-"}</b></p>
-
-<p>📝 หมายเหตุ: ${c.note||"-"}</p>
-
-<hr>
-
-<p>🚜 จำนวนงาน: <b>${cj.length}</b></p>
-
-<p>💵 ชำระแล้ว:
-<b class="green">${baht(paid)}</b>
-</p>
-
-<p>🔴 ยอดค้าง:
-<b class="red">${baht(debt)}</b>
-</p>
-
-</div>
-
-`);
-
+async function saveCustomerAndJobs(){
+ if(editingCustomerId)return updateCustomerAndJobs();
+ const name=$("cName").value.trim();if(!name)return alert("กรุณากรอกชื่อลูกค้า");
+ const r=await supabaseClient.from("customers").insert({name,phone:$("cPhone").value,address:$("cAddress").value,note:$("cNote").value}).select().single();
+ if(r.error)return alert(r.error.message);
+ const id=r.data.id;
+ for(const b of document.querySelectorAll(".job-box")){
+  const data={customer_id:id,job_date:b.querySelector(".job-date").value,job_type:b.querySelector(".job-type").value,quantity:Number(b.querySelector(".job-quantity").value)||0,unit:b.querySelector(".job-unit").value,price:Number(b.querySelector(".job-price").value)||0,paid:Number(b.querySelector(".job-paid").value)||0};
+  const x=await insertJobCompatible(data);if(!x.ok)return alert(x.message);
+ }
+ resetCustomerForm();await loadData();alert("✅ บันทึกลูกค้าและงานเรียบร้อยแล้ว");
 }
-
-
-/* =========================
-JOB RENDER
-========================= */
-
-function renderJobs(){
-
-let html="";
-
-jobs
-.slice()
-.reverse()
-.forEach(j=>{
-
-let c=
-customers.find(x=>x.id===j.customerId);
-
-html+=`
-
-<div class="item-card">
-
-<h3>🚜 ${j.type}</h3>
-
-<div class="info">
-<span>👨‍🌾 ลูกค้า</span>
-<b>${c?.name||"-"}</b>
-</div>
-
-<div class="info">
-<span>📅 วันที่</span>
-<b>${j.date}</b>
-</div>
-
-<div class="info">
-<span>🌾 พื้นที่</span>
-<b>${j.rai} ไร่</b>
-</div>
-
-<div class="info">
-<span>💰 ราคา</span>
-<b>${baht(j.price)}/ไร่</b>
-</div>
-
-<div class="info">
-<span>💵 ยอดงาน</span>
-<b>${baht(j.total)}</b>
-</div>
-
-<div class="info">
-<span>ชำระแล้ว</span>
-<b class="green">${baht(j.paid)}</b>
-</div>
-
-<div class="info">
-<span>ค้าง</span>
-
-<b class="${j.debt>0?'red':'green'}">
-
-${baht(j.debt)}
-
-</b>
-
-</div>
-
-<div>
-
-<span class="badge ${j.debt>0?'debt':'paid'}">
-
-${j.debt>0?'ยังค้างชำระ':'ชำระครบแล้ว'}
-
-</span>
-
-</div>
-
-<div class="actions">
-
-<button class="btn-blue"
-onclick="showJob(${j.id})">
-รายละเอียด
-</button>
-
-<button class="btn"
-onclick="editJob(${j.id})">
-แก้ไข
-</button>
-
-<button class="btn-red"
-onclick="remove('job',${j.id})">
-ลบ
-</button>
-
-</div>
-
-</div>
-
-`;
-
-});
-
-document.getElementById("jobList").innerHTML=
-html||
-'<div class="empty">ยังไม่มีงานรับจ้าง</div>';
-
+async function insertJobCompatible(d){
+ let r=await supabaseClient.from("jobs").insert(d);if(!r.error)return {ok:true};
+ r=await supabaseClient.from("jobs").insert({customer_id:d.customer_id,job_date:d.job_date,job_type:d.job_type,rai:d.quantity,price_per_rai:d.price,paid:d.paid});
+ return r.error?{ok:false,message:r.error.message}:{ok:true};
 }
-
-
-function showJob(id){
-
-let j=jobs.find(x=>x.id===id);
-
-let c=
-customers.find(x=>x.id===j.customerId);
-
-detail(
-
-"🚜 รายละเอียดงาน",
-
-`
-
-<div class="detail-box">
-
-<p>👨‍🌾 ลูกค้า: <b>${c?.name||"-"}</b></p>
-
-<p>📅 วันที่: <b>${j.date}</b></p>
-
-<p>🚜 งาน: <b>${j.type}</b></p>
-
-<p>🌾 จำนวน: <b>${j.rai} ไร่</b></p>
-
-<p>💰 ราคา: <b>${baht(j.price)}/ไร่</b></p>
-
-<p>💵 ยอดทั้งหมด: <b>${baht(j.total)}</b></p>
-
-<p>💳 จ่ายแล้ว:
-<b class="green">${baht(j.paid)}</b>
-</p>
-
-<p>🔴 ค้าง:
-<b class="red">${baht(j.debt)}</b>
-</p>
-
-</div>
-
-`);
-
+function editCustomer(id){
+ const c=customers.find(x=>String(x.id)===String(id));if(!c)return;
+ editingCustomerId=c.id;$("cName").value=c.name||"";$("cPhone").value=c.phone||"";$("cAddress").value=c.address||"";$("cNote").value=c.note||"";
+ $("jobContainer").innerHTML="";jobs.filter(j=>String(j.customer_id)===String(id)).forEach(j=>addJobRow({id:j.id,job_type:j.job_type,job_date:j.job_date,quantity:j.quantity??j.rai??0,unit:j.unit||"ไร่",price:j.price??j.price_per_rai??0,paid:j.paid||0}));
+ if(!jobs.some(j=>String(j.customer_id)===String(id)))addJobRow();
+ $("customerFormTitle").innerText="✏️ แก้ไขข้อมูลลูกค้า + งาน";$("editBanner").style.display="block";$("saveCustomerButton").innerText="💾 บันทึกการแก้ไข";$("cancelEditButton").style.display="block";openTabById("customer");
 }
+async function updateCustomerAndJobs(){
+ const id=editingCustomerId;
+ const r=await supabaseClient.from("customers").update({name:$("cName").value,phone:$("cPhone").value,address:$("cAddress").value,note:$("cNote").value}).eq("id",id);
+ if(r.error)return alert(r.error.message);
+ const old=jobs.filter(j=>String(j.customer_id)===String(id)),keep=[];
+ for(const b of document.querySelectorAll(".job-box")){
+  const jid=b.dataset.jobId||null,d={job_date:b.querySelector(".job-date").value,job_type:b.querySelector(".job-type").value,quantity:Number(b.querySelector(".job-quantity").value)||0,unit:b.querySelector(".job-unit").value,price:Number(b.querySelector(".job-price").value)||0,paid:Number(b.querySelector(".job-paid").value)||0};
+  if(jid){keep.push(String(jid));let u=await supabaseClient.from("jobs").update(d).eq("id",jid);if(u.error)u=await supabaseClient.from("jobs").update({job_date:d.job_date,job_type:d.job_type,rai:d.quantity,price_per_rai:d.price,paid:d.paid}).eq("id",jid);if(u.error)return alert(u.error.message)}
+  else {const x=await insertJobCompatible({customer_id:id,...d});if(!x.ok)return alert(x.message)}
+ }
+ for(const j of old)if(!keep.includes(String(j.id)))await supabaseClient.from("jobs").delete().eq("id",j.id);
+ resetCustomerForm();await loadData();alert("✅ แก้ไขข้อมูลเรียบร้อยแล้ว");
+}
+async function deleteCustomer(id){
+ if(!confirm("ลบลูกค้าและงานของลูกค้าคนนี้หรือไม่?"))return;
+ const r=await supabaseClient.from("customers").delete().eq("id",id);if(r.error)return alert(r.error.message);
+ await loadData();
+}
+function resetCustomerForm(){
+ editingCustomerId=null;$("cName").value="";$("cPhone").value="";$("cAddress").value="";$("cNote").value="";$("jobContainer").innerHTML="";addJobRow();
+ $("customerFormTitle").innerText="📝 บันทึกลูกค้า + งาน";$("editBanner").style.display="none";$("saveCustomerButton").innerText="💾 บันทึกลูกค้าและงานทั้งหมด";$("cancelEditButton").style.display="none";$("existingCustomer").value="";
+}
+function selectExistingCustomer(){const id=$("existingCustomer").value;if(id)editCustomer(id)}
+function cancelEdit(){resetCustomerForm()}
 
-
-/* =========================
-FUEL RENDER
-========================= */
-
+async function addFuel(){
+ const date=$("fDate").value,liter=Number($("fLiter").value)||0,price=Number($("fPrice").value)||0,machine=$("fMachine").value.trim();
+ if(!date||liter<=0||price<=0)return alert("กรุณากรอกวันที่ จำนวนลิตร และราคาต่อลิตร");
+ const total=liter*price;
+ const r=await supabaseClient.from("fuels").insert({fuel_date:date,machine,liter,price_per_liter:price}).select().single();
+ if(r.error)return alert("บันทึกน้ำมันไม่ได้\n\n"+r.error.message);
+ const mr=await supabaseClient.from("money").insert({money_date:date,type:"expense",detail:"ซื้อน้ำมัน "+liter+" ลิตร"+(machine?" ("+machine+")":""),amount:total});
+ if(mr.error)alert("บันทึกน้ำมันแล้ว แต่เพิ่มรายจ่ายไม่ได้\n\n"+mr.error.message);
+ $("fLiter").value="";$("fPrice").value="";$("fMachine").value="";await loadData();alert("✅ บันทึกซื้อน้ำมัน "+baht(total));
+}
+async function editFuel(id){
+ const f=fuels.find(x=>String(x.id)===String(id));if(!f)return;
+ const date=prompt("วันที่ซื้อ (YYYY-MM-DD)",f.fuel_date||today());if(date===null)return;
+ const liter=Number(prompt("จำนวนลิตร",f.liter||0));if(!liter||liter<=0)return;
+ const price=Number(prompt("ราคาต่อลิตร",f.price_per_liter||0));if(!price||price<=0)return;
+ const machine=prompt("เครื่องจักร",f.machine||"");if(machine===null)return;
+ const oldTotal=Number(f.liter||0)*Number(f.price_per_liter||0),newTotal=liter*price;
+ const r=await supabaseClient.from("fuels").update({fuel_date:date,liter,price_per_liter:price,machine}).eq("id",id);
+ if(r.error)return alert(r.error.message);
+ const oldDetail="ซื้อน้ำมัน "+f.liter+" ลิตร"+(f.machine?" ("+f.machine+")":"");
+ const newDetail="ซื้อน้ำมัน "+liter+" ลิตร"+(machine?" ("+machine+")":"");
+ const mr=await supabaseClient.from("money").update({money_date:date,detail:newDetail,amount:newTotal}).eq("detail",oldDetail).eq("amount",oldTotal).eq("money_date",f.fuel_date);
+ if(mr.error)console.warn(mr.error);
+ await loadData();alert("✅ แก้ไขรายการน้ำมันแล้ว");
+}
+async function deleteFuel(id){
+ const f=fuels.find(x=>String(x.id)===String(id));if(!f)return;
+ if(!confirm("ลบรายการซื้อน้ำมัน "+baht(Number(f.liter)*Number(f.price_per_liter))+" หรือไม่?\nระบบจะพยายามลบรายจ่ายที่สร้างคู่กันด้วย"))return;
+ const total=Number(f.liter||0)*Number(f.price_per_liter||0),detail="ซื้อน้ำมัน "+f.liter+" ลิตร"+(f.machine?" ("+f.machine+")":"");
+ const r=await supabaseClient.from("fuels").delete().eq("id",id);if(r.error)return alert(r.error.message);
+ await supabaseClient.from("money").delete().eq("detail",detail).eq("amount",total).eq("money_date",f.fuel_date);
+ await loadData();alert("✅ ลบรายการน้ำมันแล้ว");
+}
 function renderFuel(){
-
-let html="";
-
-fuels
-.slice()
-.reverse()
-.forEach(f=>{
-
-html+=`
-
-<div class="item-card">
-
-<h3>⛽ ${f.machine}</h3>
-
-<div class="info">
-<span>📅 วันที่</span>
-<b>${f.date}</b>
-</div>
-
-<div class="info">
-<span>น้ำมัน</span>
-<b>${f.liter.toLocaleString()} ลิตร</b>
-</div>
-
-<div class="info">
-<span>ราคา/ลิตร</span>
-<b>${baht(f.price)}</b>
-</div>
-
-<div class="info">
-<span>💸 ค่าใช้จ่าย</span>
-<b class="orange">${baht(f.total)}</b>
-</div>
-
-<div class="actions">
-
-<button class="btn-blue"
-onclick="showFuel(${f.id})">
-รายละเอียด
-</button>
-
-<button class="btn"
-onclick="editFuel(${f.id})">
-แก้ไข
-</button>
-
-<button class="btn-red"
-onclick="remove('fuel',${f.id})">
-ลบ
-</button>
-
-</div>
-
-</div>
-
-`;
-
-});
-
-document.getElementById("fuelList").innerHTML=
-html||
-'<div class="empty">ยังไม่มีรายการน้ำมัน</div>';
-
+ let h="";fuels.forEach(f=>{const t=Number(f.liter||0)*Number(f.price_per_liter||0);h+=`<div class="item-card"><h3>⛽ ซื้อน้ำมัน</h3>
+ <div class="info"><span>วันที่</span><b>${f.fuel_date||"-"}</b></div><div class="info"><span>เครื่องจักร</span><b>${escapeHtml(f.machine||"-")}</b></div>
+ <div class="info"><span>จำนวน</span><b>${Number(f.liter||0).toLocaleString("th-TH")} ลิตร</b></div><div class="info"><span>ราคา/ลิตร</span><b>${baht(f.price_per_liter)}</b></div>
+ <div class="info"><span>รวม</span><b class="orange">${baht(t)}</b></div><div class="actions"><button class="btn-blue" onclick="editFuel('${f.id}')">✏️ แก้ไข</button><button class="btn-red" onclick="deleteFuel('${f.id}')">🗑️ ลบ</button></div></div>`});
+ $("fuelList").innerHTML=h||'<div class="empty">ยังไม่มีรายการซื้อน้ำมัน</div>';
 }
 
-
-function showFuel(id){
-
-let f=fuels.find(x=>x.id===id);
-
-detail(
-"⛽ รายละเอียดน้ำมัน",
-
-`
-
-<div class="detail-box">
-
-<p>📅 วันที่: <b>${f.date}</b></p>
-
-<p>🚜 เครื่องจักร:
-<b>${f.machine}</b>
-</p>
-
-<p>⛽ จำนวน:
-<b>${f.liter} ลิตร</b>
-</p>
-
-<p>💰 ราคา:
-<b>${baht(f.price)}/ลิตร</b>
-</p>
-
-<p>💸 รวม:
-<b>${baht(f.total)}</b>
-</p>
-
-</div>
-
-`);
-
+async function addMoney(){
+ const date=$("mDate").value,type=$("mType").value,detail=$("mDetail").value.trim(),amount=Number($("mAmount").value)||0;
+ if(!date||!detail||amount<=0)return alert("กรุณากรอกข้อมูลให้ครบ");
+ const r=await supabaseClient.from("money").insert({money_date:date,type,detail,amount});
+ if(r.error)return alert(r.error.message);
+ $("mDetail").value="";$("mAmount").value="";await loadData();alert("✅ บันทึกรายการการเงินแล้ว");
 }
-
-
-/* =========================
-MONEY RENDER
-========================= */
-
+async function editMoney(id){
+ const m=money.find(x=>String(x.id)===String(id));if(!m)return;
+ const date=prompt("วันที่ (YYYY-MM-DD)",m.money_date||today());if(date===null)return;
+ const type=prompt("ประเภท income หรือ expense",m.type||"expense");if(type===null||!["income","expense"].includes(type))return alert("ประเภทต้องเป็น income หรือ expense");
+ const detail=prompt("รายการ",m.detail||"");if(detail===null)return;
+ const amount=Number(prompt("จำนวนเงิน",m.amount||0));if(!amount||amount<=0)return;
+ const r=await supabaseClient.from("money").update({money_date:date,type,detail,amount}).eq("id",id);
+ if(r.error)return alert(r.error.message);await loadData();alert("✅ แก้ไขรายการการเงินแล้ว");
+}
+async function deleteMoney(id){
+ const m=money.find(x=>String(x.id)===String(id));if(!m)return;
+ if(!confirm("ลบรายการ "+(m.detail||"")+" จำนวน "+baht(m.amount)+" หรือไม่?"))return;
+ const r=await supabaseClient.from("money").delete().eq("id",id);if(r.error)return alert(r.error.message);
+ await loadData();alert("✅ ลบรายการการเงินแล้ว");
+}
 function renderMoney(){
-
-let html="";
-
-money
-.slice()
-.reverse()
-.forEach(m=>{
-
-html+=`
-
-<div class="item-card">
-
-<h3>
-${m.type==="income"?"📈 รายรับ":"📉 รายจ่าย"}
-</h3>
-
-<div class="info">
-<span>📅 วันที่</span>
-<b>${m.date}</b>
-</div>
-
-<div class="info">
-<span>รายการ</span>
-<b>${m.detail}</b>
-</div>
-
-<div class="info">
-<span>จำนวนเงิน</span>
-
-<b class="${
-m.type==="income"?"green":"red"
-}">
-
-${baht(m.amount)}
-
-</b>
-
-</div>
-
-<div class="actions">
-
-<button class="btn-blue"
-onclick="showMoney(${m.id})">
-รายละเอียด
-</button>
-
-<button class="btn"
-onclick="editMoney(${m.id})">
-แก้ไข
-</button>
-
-<button class="btn-red"
-onclick="remove('money',${m.id})">
-ลบ
-</button>
-
-</div>
-
-</div>
-
-`;
-
-});
-
-document.getElementById("moneyList").innerHTML=
-html||
-'<div class="empty">ยังไม่มีรายการ</div>';
-
+ let h="";money.forEach(m=>{const inc=m.type==="income";h+=`<div class="item-card"><h3>${inc?"📈 รายรับ":"📉 รายจ่าย"}</h3>
+ <div class="info"><span>วันที่</span><b>${m.money_date||"-"}</b></div><div class="info"><span>รายการ</span><b>${escapeHtml(m.detail||"-")}</b></div>
+ <div class="info"><span>จำนวน</span><b class="${inc?"green":"red"}">${inc?"+":"-"}${baht(m.amount)}</b></div>
+ <div class="actions"><button class="btn-blue" onclick="editMoney('${m.id}')">✏️ แก้ไข</button><button class="btn-red" onclick="deleteMoney('${m.id}')">🗑️ ลบ</button></div></div>`});
+ $("moneyList").innerHTML=h||'<div class="empty">ยังไม่มีรายการการเงิน</div>';
 }
 
-
-function showMoney(id){
-
-let m=money.find(x=>x.id===id);
-
-detail(
-
-m.type==="income"
-?"📈 รายรับ"
-:"📉 รายจ่าย",
-
-`
-
-<div class="detail-box">
-
-<p>📅 วันที่:
-<b>${m.date}</b>
-</p>
-
-<p>📝 รายการ:
-<b>${m.detail}</b>
-</p>
-
-<p>💰 จำนวน:
-<b>${baht(m.amount)}</b>
-</p>
-
-</div>
-
-`);
-
+function showPaymentCustomer(){
+ const id=$("pCustomer").value;if(!id){$("paymentCustomerSummary").style.display="none";return}
+ const s=getCustomerSummary(id);$("paymentCustomerSummary").style.display="block";$("pTotal").innerText=baht(s.total);$("pPaid").innerText=baht(s.paid);$("pDebt").innerText=baht(s.debt);checkPaymentAmount();
 }
-
-
-/* =========================
-PAYMENT RENDER
-========================= */
-
+function checkPaymentAmount(){
+ const id=$("pCustomer").value,amount=Number($("pAmount").value)||0,w=$("paymentWarning");if(!id){w.style.display="none";return}
+ const d=getCustomerSummary(id).debt;if(amount>d){w.style.display="block";w.innerText="⚠️ จำนวนเงินมากกว่ายอดค้าง "+baht(d)}else w.style.display="none";
+}
+async function allocatePayment(customerId,amount){
+ const r=await supabaseClient.from("jobs").select("*").eq("customer_id",customerId).order("job_date",{ascending:true});if(r.error)throw new Error(r.error.message);
+ let remaining=amount,allocation=[];
+ for(const job of r.data||[]){
+  if(remaining<=0)break;
+  const total=Number(job.quantity??job.rai??0)*Number(job.price??job.price_per_rai??0),paid=Number(job.paid||0),debt=Math.max(total-paid,0);if(debt<=0)continue;
+  const pay=Math.min(remaining,debt),u=await supabaseClient.from("jobs").update({paid:paid+pay}).eq("id",job.id);if(u.error)throw new Error(u.error.message);
+  allocation.push({job_id:job.id,amount:pay});remaining-=pay;
+ }
+ return allocation;
+}
+async function savePayment(){
+ if(editingPaymentId)return updatePayment();
+ const cid=$("pCustomer").value,amount=Number($("pAmount").value)||0;if(!cid||amount<=0)return alert("กรุณาเลือกลูกค้าและกรอกจำนวนเงิน");
+ const s=getCustomerSummary(cid);if(amount>s.debt&&!confirm("ยอดค้าง "+baht(s.debt)+" แต่รับ "+baht(amount)+"\nต้องการบันทึกหรือไม่?"))return;
+ try{
+  const allocation=await allocatePayment(cid,amount);
+  const p=await supabaseClient.from("payments").insert({customer_id:cid,amount,payment_date:today(),payment_method:"manual",status:"paid",allocation}).select().single();
+  if(p.error)throw new Error(p.error.message);
+  const m=await supabaseClient.from("money").insert({money_date:today(),type:"income",detail:"รับชำระเงินจาก "+customerName(cid),amount});
+  if(m.error)throw new Error("ตัดยอดแล้ว แต่เพิ่มรายรับไม่ได้: "+m.error.message);
+  $("pAmount").value="";$("pCustomer").value="";$("paymentCustomerSummary").style.display="none";await loadData();alert("✅ รับชำระและตัดยอดเรียบร้อย");
+ }catch(e){alert("บันทึกการชำระไม่ได้\n\n"+e.message)}
+}
 function renderPayments(){
-
-let html="";
-
-payments
-.slice()
-.reverse()
-.forEach(p=>{
-
-let c=
-customers.find(x=>x.id===p.customerId);
-
-html+=`
-
-<div class="item-card">
-
-<h3>💳 ชำระเงิน</h3>
-
-<div class="info">
-<span>👨‍🌾 ลูกค้า</span>
-<b>${c?.name||"-"}</b>
-</div>
-
-<div class="info">
-<span>📅 วันที่</span>
-<b>${p.date}</b>
-</div>
-
-<div class="info">
-<span>💵 จำนวนเงิน</span>
-<b class="green">${baht(p.amount)}</b>
-</div>
-
-<div>
-
-<span class="badge paid">
-✓ ชำระแล้ว
-</span>
-
-</div>
-
-<div class="actions">
-
-<button class="btn-blue"
-onclick="showPayment(${p.id})">
-รายละเอียด
-</button>
-
-<button class="btn-red"
-onclick="remove('payment',${p.id})">
-ลบ
-</button>
-
-</div>
-
-</div>
-
-`;
-
-});
-
-document.getElementById("paymentList").innerHTML=
-html||
-'<div class="empty">ยังไม่มีการชำระเงิน</div>';
-
+ let h="";payments.forEach(p=>{const online=p.payment_method==="online";h+=`<div class="item-card payment-history"><h3>${online?"📱":"💳"} ${escapeHtml(customerName(p.customer_id))}</h3>
+ <div class="info"><span>วันที่</span><b>${p.payment_date||"-"}</b></div><div class="info"><span>จำนวน</span><b class="green">${baht(p.amount)}</b></div>
+ <div class="info"><span>วิธี</span><b>${online?"ออนไลน์":"รับเงินสด/โอน"}</b></div><div class="info"><span>สถานะ</span><b class="${p.status==="paid"?"green":"orange"}">${p.status==="paid"?"✓ ชำระแล้ว":"⏳ รอตรวจสอบ"}</b></div>
+ <div class="actions">${p.status==="paid"&&p.payment_method==="manual"?`<button class="btn-blue" onclick="editPayment('${p.id}')">✏️ แก้ไข</button>`:""}<button class="btn-red" onclick="deletePayment('${p.id}')">🗑️ ลบ</button></div></div>`});
+ $("paymentList").innerHTML=h||'<div class="empty">ยังไม่มีรายการชำระเงิน</div>';
 }
 
-
-function showPayment(id){
-
-let p=payments.find(x=>x.id===id);
-
-let c=
-customers.find(x=>x.id===p.customerId);
-
-detail(
-
-"💳 รายละเอียดการชำระ",
-
-`
-
-<div class="detail-box">
-
-<p>👨‍🌾 ลูกค้า:
-<b>${c?.name||"-"}</b>
-</p>
-
-<p>📅 วันที่:
-<b>${p.date}</b>
-</p>
-
-<p>💵 จำนวน:
-<b class="green">${baht(p.amount)}</b>
-</p>
-
-<p>
-<span class="badge paid">
-✓ ชำระแล้ว
-</span>
-</p>
-
-</div>
-
-`);
-
+function editPayment(id){
+ const p=payments.find(x=>String(x.id)===String(id));if(!p)return;editingPaymentId=p.id;$("pCustomer").value=p.customer_id;$("pAmount").value=p.amount;$("paymentSaveButton").innerText="💾 บันทึกการแก้ไข";$("paymentCancelButton").style.display="block";showPaymentCustomer();openTabById("payment");
+}
+async function updatePayment(){
+ alert("เพื่อความปลอดภัยของยอดงาน แนะนำให้ยกเลิกรายการเดิมแล้วสร้างรายการใหม่ หากต้องการแก้จำนวนเงิน");
+}
+function cancelPaymentEdit(){editingPaymentId=null;$("pCustomer").value="";$("pAmount").value="";$("paymentSaveButton").innerText="✓ บันทึกการชำระเงิน";$("paymentCancelButton").style.display="none";$("paymentCustomerSummary").style.display="none"}
+async function deletePayment(id){
+ const p=payments.find(x=>String(x.id)===String(id));if(!p)return;
+ if(!confirm("ยกเลิกการชำระ "+baht(p.amount)+" ของ "+customerName(p.customer_id)+" หรือไม่?"))return;
+ if(p.status==="paid"){
+  for(const a of (p.allocation||[])){const r=await supabaseClient.from("jobs").select("paid").eq("id",a.job_id).single();if(!r.error)await supabaseClient.from("jobs").update({paid:Math.max(Number(r.data.paid||0)-Number(a.amount||0),0)}).eq("id",a.job_id)}
+ }
+ const r=await supabaseClient.from("payments").delete().eq("id",id);if(r.error)return alert(r.error.message);
+ if(p.status==="paid")await supabaseClient.from("money").delete().eq("detail","รับชำระเงินจาก "+customerName(p.customer_id)).eq("amount",p.amount).eq("money_date",p.payment_date);
+ await loadData();alert("✅ ยกเลิกการชำระแล้ว");
 }
 
-
-/* =========================
-DASHBOARD
-========================= */
-
+/* QR: เก็บรูปใน localStorage ของเครื่องนี้ */
+function loadQRFile(input){
+ const file=input.files?.[0];if(!file)return;
+ const reader=new FileReader();reader.onload=()=>{try{localStorage.setItem("nakfarm_qr",reader.result);showQR()}catch(e){alert("ไฟล์ใหญ่เกินไปสำหรับการเก็บในเบราว์เซอร์ กรุณาใช้รูป QR ขนาดเล็กลง")}};reader.readAsDataURL(file);
+}
+function showQR(){
+ const src=localStorage.getItem("nakfarm_qr");$("qrCode").innerHTML=src?`<img src="${src}" alt="QR ธนาคาร">`:"<span>ยังไม่ได้ใส่ QR</span>";
+}
+function removeQR(){localStorage.removeItem("nakfarm_qr");showQR();alert("ลบ QR แล้ว")}
+function syncOnlineDebt(){const id=$("onlineCustomer").value;if(id){const d=getCustomerSummary(id).debt;if(!$("onlineAmount").value)$("onlineAmount").value=d}}
+function createOnlinePayment(){
+ const cid=$("onlineCustomer").value,amount=Number($("onlineAmount").value)||0;if(!cid||amount<=0)return alert("กรุณาเลือกลูกค้าและจำนวนเงิน");
+ const src=localStorage.getItem("nakfarm_qr");if(!src)return alert("ยังไม่ได้ใส่รูป QR ธนาคาร\nไปที่ 'ตั้งค่า QR ธนาคาร' แล้วเลือกไฟล์ QR ของคุณก่อน");
+ onlinePending={customer_id:cid,amount,payment_date:today(),payment_method:"online",status:"pending"};
+ $("onlinePaymentBox").style.display="block";$("qrCode").innerHTML=`<img src="${src}" alt="QR ธนาคาร">`;
+ $("onlinePaymentInfo").innerHTML=`<b>${escapeHtml(customerName(cid))}</b><br>ยอดชำระ <strong class="green">${baht(amount)}</strong><br><span class="note">สถานะ: รอตรวจสอบเงินเข้า</span>`;
+ $("onlinePaymentBox").scrollIntoView({behavior:"smooth",block:"center"});
+}
+async function confirmOnlinePaymentManually(){
+ if(!onlinePending)return alert("ยังไม่มีรายการออนไลน์");
+ if(!confirm("ยืนยันว่าเงินจำนวน "+baht(onlinePending.amount)+" เข้าบัญชีแล้วใช่หรือไม่?\n\nปุ่มนี้เป็นการยืนยันด้วยคน ยังไม่ใช่การตรวจจากธนาคารอัตโนมัติ"))return;
+ try{
+  const allocation=await allocatePayment(onlinePending.customer_id,onlinePending.amount);
+  const p=await supabaseClient.from("payments").insert({...onlinePending,status:"paid",allocation}).select().single();if(p.error)throw new Error(p.error.message);
+  const m=await supabaseClient.from("money").insert({money_date:today(),type:"income",detail:"รับชำระออนไลน์จาก "+customerName(onlinePending.customer_id),amount:onlinePending.amount});if(m.error)throw new Error(m.error.message);
+  onlinePending=null;$("onlinePaymentBox").style.display="none";$("onlineAmount").value="";$("onlineCustomer").value="";await loadData();alert("✅ ยืนยันรับเงินออนไลน์และตัดยอดแล้ว");
+ }catch(e){alert("บันทึกออนไลน์ไม่ได้\n\n"+e.message)}
+}
+function renderOnlineHistory(){
+ const online=payments.filter(p=>p.payment_method==="online");let h="";
+ online.forEach(p=>{h+=`<div class="item-card"><h3>📱 ${escapeHtml(customerName(p.customer_id))}</h3><div class="info"><span>วันที่</span><b>${p.payment_date||"-"}</b></div><div class="info"><span>จำนวน</span><b class="green">${baht(p.amount)}</b></div><div class="info"><span>สถานะ</span><b class="green">${p.status==="paid"?"✓ ชำระแล้ว":"⏳ รอตรวจสอบ"}</b></div></div>`});
+ $("onlinePaymentHistory").innerHTML=h||'<div class="empty">ยังไม่มีรายการชำระออนไลน์</div>';
+}
 function renderDashboard(){
-
-let debt=
-jobs.reduce((s,x)=>s+x.debt,0);
-
-let paid=
-jobs.reduce((s,x)=>s+x.paid,0);
-
-let income=
-money
-.filter(x=>x.type==="income")
-.reduce((s,x)=>s+x.amount,0);
-
-let expense=
-money
-.filter(x=>x.type==="expense")
-.reduce((s,x)=>s+x.amount,0);
-
-let fuelExpense=
-fuels.reduce((s,x)=>s+x.total,0);
-
-document.getElementById("dashDebt")
-.innerText=baht(debt);
-
-document.getElementById("dashPaid")
-.innerText=baht(paid);
-
-document.getElementById("dashIncome")
-.innerText=baht(income+paid);
-
-document.getElementById("dashExpense")
-.innerText=baht(expense+fuelExpense);
-
-
-document.getElementById("homeSummary").innerHTML=`
-
-<div class="cards">
-
-<div class="item-card">
-<h3>👨‍🌾 ลูกค้า</h3>
-<div class="stat-value blue">
-${customers.length} ราย
-</div>
-</div>
-
-<div class="item-card">
-<h3>🚜 งานรับจ้าง</h3>
-<div class="stat-value orange">
-${jobs.length} งาน
-</div>
-</div>
-
-<div class="item-card">
-<h3>🌾 พื้นที่รับจ้าง</h3>
-<div class="stat-value green">
-${jobs.reduce((s,x)=>s+x.rai,0).toLocaleString()} ไร่
-</div>
-</div>
-
-<div class="item-card">
-<h3>⛽ น้ำมัน</h3>
-<div class="stat-value orange">
-${fuels.reduce((s,x)=>s+x.liter,0).toLocaleString()} ลิตร
-</div>
-</div>
-
-</div>
-
-<br>
-
-<div class="item-card">
-
-<h3>💵 เงินสุทธิ</h3>
-
-<div class="stat-value ${
-income+paid-expense-fuelExpense>=0
-?"green":"red"
-}">
-
-${baht(income+paid-expense-fuelExpense)}
-
-</div>
-
-</div>
-
-`;
-
-
-let latest=[];
-
-jobs.forEach(x=>{
-
-let c=
-customers.find(c=>c.id===x.customerId);
-
-latest.push({
-
-date:x.date,
-
-text:`🚜 ${x.type} - ${c?.name||"-"}`,
-
-amount:x.total
-
-});
-
-});
-
-fuels.forEach(x=>{
-
-latest.push({
-
-date:x.date,
-
-text:`⛽ ${x.machine}`,
-
-amount:x.total
-
-});
-
-});
-
-money.forEach(x=>{
-
-latest.push({
-
-date:x.date,
-
-text:`${x.type==="income"?"📈":"📉"} ${x.detail}`,
-
-amount:x.amount
-
-});
-
-});
-
-latest.sort((a,b)=>
-b.date.localeCompare(a.date)
-);
-
-document.getElementById("latestList")
-.innerHTML=
-latest.slice(0,10).map(x=>`
-
-<div class="item-card" style="margin-bottom:8px">
-
-<div class="info">
-
-<span>
-${x.text}
-</span>
-
-<b>
-${baht(x.amount)}
-</b>
-
-</div>
-
-<div>
-<small>${x.date}</small>
-</div>
-
-</div>
-
-`).join("")
-||
-'<div class="empty">ยังไม่มีรายการ</div>';
-
+ let total=0,paid=0;jobs.forEach(j=>{total+=Number(j.quantity??j.rai??0)*Number(j.price??j.price_per_rai??0);paid+=Number(j.paid||0)});
+ const manualIncome=money.filter(m=>m.type==="income"&&!String(m.detail||"").startsWith("รับชำระเงินจาก ")&&!String(m.detail||"").startsWith("รับชำระออนไลน์จาก ")).reduce((s,m)=>s+Number(m.amount||0),0);
+ const income=paid+manualIncome,expense=money.filter(m=>m.type==="expense").reduce((s,m)=>s+Number(m.amount||0),0),debt=Math.max(total-paid,0),profit=income-expense;
+ $("dashDebt").innerText=baht(debt);$("dashPaid").innerText=baht(paid);$("dashIncome").innerText=baht(income);$("dashExpense").innerText=baht(expense);$("dashProfit").innerText=baht(profit);
+ $("summaryIncome").innerText=baht(income);$("summaryExpense").innerText=baht(expense);$("summaryProfit").innerText=baht(profit);
+ $("summary").innerHTML=`<div class="cards"><div class="item-card"><h3>👨‍🌾 ลูกค้า</h3><div class="stat-value blue">${customers.length}</div></div><div class="item-card"><h3>🚜 งาน</h3><div class="stat-value orange">${jobs.length}</div></div><div class="item-card"><h3>💰 ยอดงานทั้งหมด</h3><div class="stat-value">${baht(total)}</div></div><div class="item-card"><h3>💵 จ่ายแล้ว</h3><div class="stat-value green">${baht(paid)}</div></div><div class="item-card"><h3>🔴 หนี้คงเหลือ</h3><div class="stat-value red">${baht(debt)}</div></div><div class="item-card"><h3>📈 รายรับรวม</h3><div class="stat-value blue">${baht(income)}</div></div></div>`;
 }
+function render(){renderCustomerSelects();renderCustomers();renderPayments();renderOnlineHistory();renderFuel();renderMoney();renderDashboard();showQR()}
+function openTab(id,btn){document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");if(btn)btn.classList.add("active")}
+function openTabById(id){document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");const map={home:0,customer:1,customerList:2,fuel:3,money:4,payment:5};document.querySelectorAll(".tab")[map[id]].classList.add("active")}
 
-
-/* =========================
-SELECTS
-========================= */
-
-function renderSelects(){
-
-let html=
-'<option value="">-- เลือกลูกค้า --</option>';
-
-customers.forEach(c=>{
-
-html+=`
-<option value="${c.id}">
-${c.name}
-</option>
-`;
-
-});
-
-document.getElementById("jCustomer").innerHTML=html;
-
-document.getElementById("pCustomer").innerHTML=html;
-
-}
-
-
-/* =========================
-MAIN RENDER
-========================= */
-
-function render(){
-
-renderSelects();
-
-renderCustomers();
-
-renderJobs();
-
-renderFuel();
-
-renderMoney();
-
-renderPayments();
-
-renderDashboard();
-
-}
-
-
-/* =========================
-INIT
-========================= */
-
-document.getElementById("dateNow")
-.innerText=
-new Date().toLocaleDateString(
-"th-TH",
-{
-day:"numeric",
-month:"short",
-year:"numeric"
-}
-);
-
-document.getElementById("jDate").value=today();
-
-document.getElementById("fDate").value=today();
-
-document.getElementById("mDate").value=today();
-
-render();
-
+$("today").innerText=new Date().toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"});
+$("fDate").value=today();$("mDate").value=today();addJobRow();loadData();
 </script>
-
 </body>
 </html>
+'''
