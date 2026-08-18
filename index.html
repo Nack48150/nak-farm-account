@@ -6,10 +6,23 @@
 <title>NAK FARM ACCOUNT</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,"Noto Sans Thai",sans-serif;background:#f3f5f7;color:#222}
-header{background:linear-gradient(135deg,#111,#333);color:#fff;padding:16px;position:sticky;top:0;z-index:20}
-.header{max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:23px;font-weight:bold}.logo span{color:#ff8500}
+body{margin:0;font-family:Arial,"Noto Sans Thai",sans-serif;background:linear-gradient(180deg,#eef7e8 0%,#f8f5e9 45%,#f3efe2 100%);color:#263326;position:relative;min-height:100vh}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;background:radial-gradient(circle at 10% 20%,#8fbd5a 0 2px,transparent 3px),radial-gradient(circle at 85% 75%,#d5a62b 0 2px,transparent 3px);background-size:38px 38px,52px 52px;z-index:-1}
+header{background:linear-gradient(135deg,#173b24 0%,#245d31 48%,#d87900 100%);color:#fff;padding:10px 16px;position:sticky;top:0;z-index:20;box-shadow:0 5px 20px #173b2440;border-bottom:3px solid #e7ad2d}
+.header{max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.logo{font-size:22px;font-weight:900;display:flex;align-items:center;gap:10px;text-shadow:0 2px 3px #0008}.logo span{color:#ffd447}
+.brand-mini-logo{width:58px;height:58px;border-radius:50%;object-fit:cover;background:#fff;border:3px solid #ffd447;box-shadow:0 2px 10px #0006}
+.farm-title{display:flex;flex-direction:column;line-height:1.05}.farm-title small{font-size:11px;color:#e9f6dc;font-weight:700;letter-spacing:.5px;margin-top:4px}
+.container{max-width:1200px;margin:auto;padding:18px 15px 35px}
+.dashboard{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+.stat,.panel,.item-card{background:#fff;border-radius:15px;box-shadow:0 4px 16px #29451b1a;border:1px solid #dfe8d6}
+.stat{padding:17px}.stat-title{font-size:14px;color:#66735f}.stat-value{font-size:25px;font-weight:bold;margin-top:7px}
+.red{color:#c83b2f}.green{color:#16833a}.orange{color:#d66b00}.blue{color:#2877a9}
+.tabs{display:flex;gap:7px;overflow-x:auto;margin-bottom:15px;padding-bottom:3px}.tab{background:#fff;border:1px solid #d9e4d1;padding:11px 15px;border-radius:10px;white-space:nowrap;cursor:pointer;font-weight:bold;color:#38513a;box-shadow:0 2px 7px #29451b12}.tab.active{background:linear-gradient(135deg,#2e7d32,#5a9e35);color:#fff;border-color:#2e7d32;box-shadow:0 4px 12px #2e7d3240}
+.section{display:none}.section.active{display:block}.panel{padding:20px;margin-bottom:18px}.panel h2{margin-top:0;color:#284b2b}.panel h3{color:#355c37}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+label{display:block;font-size:14px;margin-bottom:5px;font-weight:bold;color:#42513f}
+input,select{width:100%;padding:12px;border:1px solid #cfdcc8;border-radius:9px;font-size:15px;background:#fbfdf9}
 .container{max-width:1200px;margin:auto;padding:15px}
 .dashboard{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
 .stat,.panel,.item-card{background:#fff;border-radius:15px;box-shadow:0 3px 12px #0001}
@@ -21,12 +34,12 @@ header{background:linear-gradient(135deg,#111,#333);color:#fff;padding:16px;posi
 label{display:block;font-size:14px;margin-bottom:5px;font-weight:bold}
 input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:9px;font-size:15px}
 button{border:0;border-radius:9px;padding:10px 14px;font-weight:bold;cursor:pointer}
-.btn{background:#ff7a00;color:#fff}.btn-green{background:#198754;color:#fff}.btn-red{background:#dc3545;color:#fff}.btn-blue{background:#1769aa;color:#fff}.btn-dark{background:#222;color:#fff}
+.btn{background:linear-gradient(135deg,#e87800,#f2a900);color:#fff}.btn-green{background:linear-gradient(135deg,#218838,#4d9d39);color:#fff}.btn-red{background:#c9302c;color:#fff}.btn-blue{background:#2877a9;color:#fff}.btn-dark{background:#29402d;color:#fff}
 .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.item-card{padding:15px;box-shadow:0 2px 8px #0000000d}
 .item-card h3{margin:0 0 10px}.info{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f0f0f0;font-size:14px;gap:10px}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
-.job-box{border:2px solid #eee;border-radius:15px;padding:15px;margin-bottom:12px;background:#fafafa}.job-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.job-number{font-weight:bold;color:#ff7a00;font-size:17px}.remove-job{background:#dc3545;color:#fff;padding:7px 10px}.add-job{width:100%;background:#fff;border:2px dashed #ff7a00;color:#ff7a00;padding:13px;font-size:16px}
-.job-total{background:#fff3e8;border-radius:10px;padding:12px;margin-top:12px;text-align:right;font-size:18px;font-weight:bold}
-.total-box,.payment-summary{background:#222;color:#fff;border-radius:15px;padding:20px;margin-top:15px}.total-row,.payment-summary-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #ffffff22}.total-row:last-child,.payment-summary-row:last-child{border:0}.total-main{font-size:24px;font-weight:bold}.payment-debt{font-size:27px;font-weight:bold;color:#ffb000}
+.job-box{border:2px solid #eee;border-radius:15px;padding:15px;margin-bottom:12px;background:#fafafa}.job-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.job-number{font-weight:bold;color:#ff7a00;font-size:17px}.remove-job{background:#dc3545;color:#fff;padding:7px 10px}.add-job{width:100%;background:#fbfff8;border:2px dashed #6a9e48;color:#3f7b34;padding:13px;font-size:16px}
+.job-total{background:linear-gradient(135deg,#fff8e7,#eef8e8);border-radius:10px;padding:12px;margin-top:12px;text-align:right;font-size:18px;font-weight:bold;color:#3e5b36}
+.total-box,.payment-summary{background:linear-gradient(135deg,#193c25,#2d6334);color:#fff;border-radius:15px;padding:20px;margin-top:15px;box-shadow:0 8px 20px #193c2530}.total-row,.payment-summary-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #ffffff22}.total-row:last-child,.payment-summary-row:last-child{border:0}.total-main{font-size:24px;font-weight:bold}.payment-debt{font-size:27px;font-weight:bold;color:#ffb000}
 .empty{padding:35px;text-align:center;color:#999;background:#fafafa;border-radius:12px}.edit-banner{background:#fff3cd;border:1px solid #ffe08a;padding:12px;border-radius:10px;margin-bottom:15px;display:none}
 .status{position:fixed;bottom:15px;right:15px;padding:10px 15px;border-radius:30px;background:#222;color:#fff;font-size:13px;z-index:50}
 .online-box{display:none;margin-top:18px;padding:18px;border-radius:15px;background:#f7f9fb;border:1px solid #ddd;text-align:center}
@@ -36,16 +49,34 @@ button{border:0;border-radius:9px;padding:10px 14px;font-weight:bold;cursor:poin
 @media(max-width:800px){.dashboard{grid-template-columns:repeat(2,1fr)}.cards,.form-grid{grid-template-columns:1fr}}
 @media(max-width:500px){.dashboard{grid-template-columns:1fr 1fr}.stat-value{font-size:20px}}
 
+/* ===== NAK FARM BRAND THEME ===== */
+.farm-banner{background:linear-gradient(135deg,#f9fff2,#fff6df);border:1px solid #d8e7c9;border-radius:18px;padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;gap:15px;box-shadow:0 5px 16px #29451b12}
+.farm-banner img{width:82px;height:82px;object-fit:cover;border-radius:50%;border:3px solid #e6ad27;background:#fff}
+.farm-banner strong{font-size:20px;color:#24542b}.farm-banner p{margin:5px 0 0;color:#65705f;font-size:13px}
+.section.active .panel{animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:.7;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media(max-width:600px){.farm-banner img{width:65px;height:65px}.farm-banner strong{font-size:17px}.farm-banner{padding:11px}.logo{font-size:17px}.brand-mini-logo{width:45px;height:45px}.user-box{gap:5px}.user-name{display:none}}
+
 /* ===== AUTH / USER MANAGEMENT ===== */
-#loginScreen{position:fixed;inset:0;background:linear-gradient(135deg,#111,#333);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
-.login-box{width:100%;max-width:410px;background:#fff;border-radius:20px;padding:30px;box-shadow:0 15px 50px #0005}
-.login-logo{text-align:center;font-size:28px;font-weight:bold;margin-bottom:8px}.login-logo span{color:#ff8500}.login-subtitle{text-align:center;color:#777;margin-bottom:25px}
+#loginScreen{position:fixed;inset:0;background:linear-gradient(135deg,#173b24 0%,#2f6b37 55%,#d77b00 100%);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;overflow:auto}
+#loginScreen:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 80%,#f0c54d33 0 120px,transparent 121px),radial-gradient(circle at 85% 20%,#ffffff18 0 150px,transparent 151px)}
+.login-box{position:relative;width:100%;max-width:430px;background:#fffffff5;border-radius:26px;padding:28px;box-shadow:0 20px 60px #102d1680;border:3px solid #e9bf3b}
+.login-logo{text-align:center;font-size:25px;font-weight:900;margin-bottom:8px;color:#234d2a}.login-logo span{color:#e47700}.login-logo-img{width:170px;height:170px;display:block;margin:0 auto 12px;object-fit:cover;border-radius:50%;background:#fff;border:5px solid #e7ad2d;box-shadow:0 8px 22px #173b2430}.login-subtitle{text-align:center;color:#777;margin-bottom:25px}
 .login-error{color:#dc3545;background:#fff0f0;padding:10px;border-radius:8px;margin-bottom:12px;display:none}
-.login-btn{width:100%;padding:14px;background:#ff7a00;color:#fff;font-size:17px}
+.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,#e87800,#f2a900);color:#fff;font-size:17px;box-shadow:0 5px 14px #d66b0040}
 #appScreen{display:none}.user-box{display:flex;align-items:center;gap:8px}.user-name{font-size:13px;color:#fff}.logout-btn{background:#dc3545;color:#fff;padding:7px 10px}
 .role-badge{font-size:11px;padding:4px 7px;border-radius:20px;background:#198754;color:#fff}.role-admin{background:#6f42c1}.role-viewer{background:#6c757d}
 .admin-user-card{background:#fafafa;border:1px solid #eee;border-radius:12px;padding:14px}.admin-user-card .info{font-size:13px}
 .viewer-lock{background:#fff3cd;border:1px solid #ffe08a;color:#856404;padding:10px;border-radius:10px;margin-bottom:12px}
+
+
+/* ===== MACHINE SHOWCASE ===== */
+.machine-showcase{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+.machine-card{position:relative;overflow:hidden;background:linear-gradient(135deg,#ffffff,#f7fbf3);border:1px solid #d8e5cf;border-radius:20px;box-shadow:0 6px 18px #29451b18;min-height:180px}
+.machine-card:after{content:"";position:absolute;inset:auto -30px -45px auto;width:150px;height:150px;border-radius:50%;background:#f0b52b18}
+.machine-card img{width:100%;height:210px;object-fit:contain;background:linear-gradient(180deg,#f8fbf5,#eef4e9);display:block}
+.machine-info{padding:13px 15px 16px;position:relative;z-index:2}.machine-info h3{margin:0 0 5px;color:#234d2a}.machine-info p{margin:0;color:#697364;font-size:13px}.machine-badge{display:inline-block;margin-top:9px;padding:5px 9px;border-radius:20px;background:#fff1d5;color:#a85d00;font-size:11px;font-weight:800}
+@media(max-width:700px){.machine-showcase{grid-template-columns:1fr}.machine-card img{height:180px}}
 
 </style>
 </head>
@@ -53,7 +84,9 @@ button{border:0;border-radius:9px;padding:10px 14px;font-weight:bold;cursor:poin
 
 <div id="loginScreen">
   <div class="login-box">
-    <div class="login-logo">บัญชีการเงิน <span>รถไถ่และรถเกี่ยวข้าว</span> แน็ก</div>
+    <img class="login-logo-img" src="nak-farm-logo.png" alt="NAK FARM รถไถและรถเกี่ยวข้าว">
+    <div class="login-logo">NAK FARM <span>ACCOUNT</span></div>
+    <div style="text-align:center;color:#53634f;font-weight:700;margin-bottom:10px">บัญชีการเงิน รถไถและรถเกี่ยวข้าว</div>
     <div class="login-subtitle">🔐 เข้าสู่ระบบเจ้าของกิจการ</div>
     <div id="loginError" class="login-error"></div>
     <label>📧 Email</label>
@@ -65,8 +98,21 @@ button{border:0;border-radius:9px;padding:10px 14px;font-weight:bold;cursor:poin
 </div>
 <div id="appScreen">
 
-<header><div class="header"><div class="logo">บัญชีการเงิน <span>รถไถ่และรถเกี่ยวข้าว</span> แน็ก</div><div class="user-box"><div id="today"></div><div id="currentUser" class="user-name"></div><span id="roleBadge" class="role-badge"></span><button class="logout-btn" onclick="logout()">🚪 ออก</button></div></div></header>
+<header><div class="header"><div class="logo"><img class="brand-mini-logo" src="nak-farm-logo.png" alt="NAK FARM"><div class="farm-title"><div>NAK FARM <span>ACCOUNT</span></div><small>บัญชีงานรถไถ • รถเกี่ยวข้าว • ฟาร์ม</small></div></div><div class="user-box"><div id="today"></div><div id="currentUser" class="user-name"></div><span id="roleBadge" class="role-badge"></span><button class="logout-btn" onclick="logout()">🚪 ออก</button></div></div></header>
 <div class="container">
+
+<div class="farm-banner"><img src="nak-farm-logo.png" alt="NAK FARM"><div><strong>🌾 NAK FARM ACCOUNT</strong><p>ระบบบัญชีงานรถไถและรถเกี่ยวข้าว • บันทึกลูกค้า งาน น้ำมัน การเงิน และการชำระเงิน</p></div></div>
+
+<div class="machine-showcase">
+  <div class="machine-card">
+    <img src="https://www.siamkubota.co.th/wp-content/uploads/2025/05/Cabin-Hero.jpg" alt="Kubota L5228 Air Cabin" loading="lazy">
+    <div class="machine-info"><h3>🚜 KUBOTA L5228</h3><p>รถแทรกเตอร์คู่ใจสำหรับงานนา งานไร่ และงานเตรียมดิน</p><span class="machine-badge">52 แรงม้า • L-SERIES</span></div>
+  </div>
+  <div class="machine-card">
+    <img src="https://www.siamkubota.co.th/wp-content/uploads/2022/03/DC-70G-PRO-CABIN-Left-RGB-513x395-px.png" alt="Kubota DC-70G PRO Cabin" loading="lazy">
+    <div class="machine-info"><h3>🌾 KUBOTA DC-70G PRO Cabin</h3><p>รถเกี่ยวนวดข้าวสำหรับงานเกี่ยวข้าว พร้อมห้องโดยสาร</p><span class="machine-badge">69 แรงม้า • PRO CABIN</span></div>
+  </div>
+</div>
 
 <div class="dashboard">
 <div class="stat"><div class="stat-title">🔴 ลูกหนี้คงเหลือ</div><div class="stat-value red" id="dashDebt">฿0</div></div>
